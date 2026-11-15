@@ -84,6 +84,9 @@ export function validarResposta(lacuna, corpo) {
   if (typeof campos !== 'object' || campos === null) return falha('Campos inválidos.');
 
   const limpos = Object.fromEntries(lacuna.campos.map((c) => [c.chave, texto(campos[c.chave])]));
+  // Campos de escolha (ex.: Existente mantido / Novo) só aceitam uma das opções definidas.
+  const foraDaLista = lacuna.campos.find((c) => Array.isArray(c.opcoes) && limpos[c.chave] && !c.opcoes.includes(limpos[c.chave]));
+  if (foraDaLista) return falha(`${foraDaLista.rotulo}: escolha uma das opções (${foraDaLista.opcoes.join(', ')}).`);
   const obs = texto(observacao);
   const responsavel = texto(corpo.responsavel);
   const notaValidacao = texto(corpo.notaValidacao);
@@ -314,8 +317,9 @@ export function criarNucleo(arm) {
   });
 
   /** Lacuna criada manualmente no app (ID novo, nunca reaproveitado; origem registrada). */
+  const SITUACAO = ['situacao', 'Existente mantido / novo', ['Existente mantido', 'Novo']];
   const CAMPOS_PADRAO = {
-    piso: [['piso', 'Piso']], parede: [['parede', 'Acabamento de parede']], revestimento: [['piso', 'Piso'], ['parede', 'Revestimento de parede'], ['altura', 'Altura (m)']],
+    piso: [['piso', 'Piso'], SITUACAO], parede: [['parede', 'Acabamento de parede']], revestimento: [['piso', 'Piso'], ['parede', 'Revestimento de parede'], ['altura', 'Altura (m)'], SITUACAO],
     forro: [['teto', 'Teto / forro']], iluminacao: [['modelo', 'Modelo / fabricante'], ['quantidade', 'Quantidade']],
     inconsistencia: [['resposta', 'Esclarecimento']], documentacao: [['resposta', 'Esclarecimento']]
   };
@@ -341,7 +345,7 @@ export function criarNucleo(arm) {
     const nova = {
       id: `L${String(maior + 1).padStart(2, '0')}`, titulo, categoria, prioridade,
       onde: t('onde', 300) || `Prancha p.${marcador.prancha}`, problema, pergunta, impacto: t('impacto', 1000) || 'A avaliar.',
-      campos: CAMPOS_PADRAO[categoria].map(([chave, rotulo]) => ({ chave, rotulo })),
+      campos: CAMPOS_PADRAO[categoria].map(([chave, rotulo, opcoes]) => ({ chave, rotulo, ...(opcoes ? { opcoes } : {}) })),
       marcadores: [{ ...marcador, x: Math.round(marcador.x * 10) / 10, y: Math.round(marcador.y * 10) / 10, w: Math.round(marcador.w * 10) / 10, h: Math.round(marcador.h * 10) / 10 }],
       ambientes, identificadaEm: new Date().toISOString().slice(0, 10), origem: `Criada manualmente no app${autor ? ` por ${autor}` : ''}`
     };

@@ -141,7 +141,12 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
 
   // ── 2. Resposta
   const resposta = secao('Resposta', [
-    ...l.campos.map((c) => campoTexto(c.rotulo, `campo:${c.chave}`, r.campos?.[c.chave], { disabled: !editavel })),
+    ...l.campos.map((c) => (Array.isArray(c.opcoes)
+      ? el('label', { className: 'campo' }, [c.rotulo, el('select', { className: 'entrada', name: `campo:${c.chave}`, disabled: !editavel }, [
+        el('option', { value: '', textContent: '— selecione —' }),
+        ...c.opcoes.map((o) => el('option', { value: o, textContent: o, selected: r.campos?.[c.chave] === o }))
+      ])])
+      : campoTexto(c.rotulo, `campo:${c.chave}`, r.campos?.[c.chave], { disabled: !editavel }))),
     campoTexto('Observação', 'observacao', r.observacao, { area: true, disabled: !editavel && !['em_validacao', 'validada', 'nao_aplicavel'].includes(r.status) }),
     campoTexto('Responsável pela informação', 'responsavel', r.responsavel || '', { dica: 'Quem respondeu: arquiteta, condomínio, fornecedor…', disabled: !editavel, maxLength: 120 }),
     !editavel ? el('p', { className: 'muted', style: 'margin:0;font-size:12px', textContent: 'Resposta travada neste status. Para editar, reabra a lacuna.' }) : null

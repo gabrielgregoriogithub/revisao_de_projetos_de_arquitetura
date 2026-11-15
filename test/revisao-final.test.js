@@ -49,7 +49,7 @@ test('criar lacuna manual: valida campos e marcador, gera ID seguinte, campos po
   assert.equal((await s.criarLacuna({ ...base, marcador: { ...base.marcador, prancha: 9 } })).codigo, 400, 'prancha inexistente');
   const r = await s.criarLacuna({ ...base, ambientes: ['Copa', ''] }, { autor: 'Ana' });
   assert.equal(r.lacuna.id, 'L10');
-  assert.deepEqual(r.lacuna.campos.map((c) => c.chave), ['piso', 'parede', 'altura']);
+  assert.deepEqual(r.lacuna.campos.map((c) => c.chave), ['piso', 'parede', 'altura', 'situacao']);
   assert.deepEqual(r.lacuna.ambientes, ['Copa']);
   assert.match(r.lacuna.origem, /manualmente.*Ana/);
   const d = await s.carregar();

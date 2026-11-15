@@ -20,6 +20,14 @@
       {
         "chave": "altura",
         "rotulo": "Altura do revestimento (m)"
+      },
+      {
+        "chave": "situacao",
+        "rotulo": "Existente mantido / novo",
+        "opcoes": [
+          "Existente mantido",
+          "Novo"
+        ]
       }
     ],
     "marcadores": [
@@ -108,6 +116,14 @@
       {
         "chave": "altura",
         "rotulo": "Altura (m)"
+      },
+      {
+        "chave": "situacao",
+        "rotulo": "Existente mantido / novo",
+        "opcoes": [
+          "Existente mantido",
+          "Novo"
+        ]
       }
     ],
     "marcadores": [
@@ -219,7 +235,11 @@
       },
       {
         "chave": "situacao",
-        "rotulo": "Existente mantido / novo"
+        "rotulo": "Existente mantido / novo",
+        "opcoes": [
+          "Existente mantido",
+          "Novo"
+        ]
       }
     ],
     "marcadores": [
@@ -599,6 +619,14 @@
       {
         "chave": "teto",
         "rotulo": "Teto / forro"
+      },
+      {
+        "chave": "situacao",
+        "rotulo": "Existente mantido / novo",
+        "opcoes": [
+          "Existente mantido",
+          "Novo"
+        ]
       }
     ],
     "marcadores": [
