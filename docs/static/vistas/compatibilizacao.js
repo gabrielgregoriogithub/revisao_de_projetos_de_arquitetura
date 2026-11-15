@@ -2,7 +2,7 @@
 // prévia determinística do processamento de respostas e integridade dos dados.
 import { el } from '../dom.js';
 import { estado } from '../estado.js';
-import { api } from '../api.js';
+import { api, ESTATICO } from '../api.js';
 import { botao, seloStatus, etiqueta, vazio, carregando } from '../componentes.js';
 import { DISCIPLINAS } from '/dominio/lacunas.js';
 import { STATUS_INFO } from '/dominio/status.js';
@@ -68,7 +68,7 @@ export function montar(alvo, { navegar }) {
     try {
       const p = await api.previaProcessamento();
       previa.replaceChildren(
-        el('p', { style: 'margin:0 0 10px;font-size:13px;color:var(--tinta-2)', textContent: 'O que o protocolo determinístico faria agora (nada é alterado aqui). Para aplicar, peça ao Claude Code: "processe as respostas das lacunas".' }),
+        el('p', { style: 'margin:0 0 10px;font-size:13px;color:var(--tinta-2)', textContent: ESTATICO ? 'O que o protocolo determinístico faria agora (nada é alterado aqui). A aplicação e a revisão técnica pelo Claude Code exigem a versão local.' : 'O que o protocolo determinístico faria agora (nada é alterado aqui). Para aplicar, peça ao Claude Code: "processe as respostas das lacunas".' }),
         p.acoes.length || p.contradicoes.length ? el('ul', { className: 'problemas' }, [
           ...p.acoes.map((a) => el('li', {}, [el('strong', { textContent: `${a.lacuna}: ` }), seloStatus(a.de), ' → ', seloStatus(a.para), el('div', { className: 'muted', style: 'font-size:12px', textContent: a.motivo })])),
           ...p.contradicoes.map((c) => el('li', {}, [el('strong', { textContent: `Contradição ${c.lacunas.join(' × ')}` }), ` em ${c.campo} (${c.ambientes.join(', ')}): "${c.valores[0]}" ≠ "${c.valores[1]}"`]))

@@ -4,6 +4,7 @@ import { api } from './api.js';
 import { estado } from './estado.js';
 import { botao, avisar } from './componentes.js';
 import { areaRef, perimetroRef, escalaDe } from '/dominio/geometria.js';
+import { lerNumeroBr } from '/dominio/numeros.js';
 
 const fmt = (v, casas = 2) => v.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
 
@@ -81,7 +82,7 @@ export function criarMedicao({ visor, container, prancha }) {
       el('option', { value: 'prancha', textContent: `Só à prancha p.${prancha()}` })
     ]);
     const aplicar = async () => {
-      const m = Number(real.value.replace(',', '.'));
+      const m = lerNumeroBr(real.value);
       if (!(m > 0) || !comprimentoRef) { real.focus(); return; }
       try {
         await api.definirEscala({

@@ -9,7 +9,9 @@ export const definirProjetoAtual = (id) => { projetoAtual = id; };
 /** URL da imagem de uma prancha (do projeto ativo, ou de outro projeto — usado na comparação de revisões). */
 export function urlPrancha(arquivo, projetoId = null) {
   if (local) return local.urlPrancha(arquivo, projetoId ?? projetoAtual);
-  return projetoId ? `/p/${encodeURIComponent(projetoId)}/pranchas/${encodeURIComponent(arquivo)}` : `/pranchas/${encodeURIComponent(arquivo)}`;
+  // URL com o id do projeto: revisões diferentes nunca compartilham cache de imagem.
+  const id = projetoId ?? projetoAtual;
+  return id ? `/p/${encodeURIComponent(id)}/pranchas/${encodeURIComponent(arquivo)}` : `/pranchas/${encodeURIComponent(arquivo)}`;
 }
 export const urlAnexo = (id) => (local ? local.urlAnexo(id) : `/anexos/${encodeURIComponent(id)}`);
 

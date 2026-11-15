@@ -67,7 +67,7 @@ function desenharTopo() {
     ]),
     el('span', { textContent: `${ind.abertas} abertas` })
   );
-  $('#sidebar-rodape').textContent = `${p.pranchas.length} pranchas · ${estado.lacunas.length} lacunas · análise ${p.analisadoEm}`;
+  $('#sidebar-rodape').textContent = `${p.pranchas.length} pranchas · ${estado.lacunas.length} lacunas · análise ${p.analisadoEm ?? 'pendente'}`;
 }
 
 function desenharSync() {

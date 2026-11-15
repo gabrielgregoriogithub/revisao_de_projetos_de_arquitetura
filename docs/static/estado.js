@@ -29,6 +29,12 @@ export const estado = {
   async carregar() {
     dados = await api.projeto();
     definirProjetoAtual(dados.projetoId);
+    // Filtros salvos valem para um projeto: ao abrir outro, começam limpos (prancha/ambiente podem não existir).
+    if (preferencia.ler('filtrosProjeto', null) !== dados.projetoId) {
+      filtros = { ...FILTROS_PADRAO };
+      preferencia.gravar('filtros', {});
+      preferencia.gravar('filtrosProjeto', dados.projetoId);
+    }
     this.notificar('dados');
   },
 

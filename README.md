@@ -20,7 +20,7 @@ Para publicar, ative em Settings › Pages: branch `main`, pasta `/docs` (ou `/`
 ```bash
 cd lacunas-app
 npm start                  # http://localhost:8766
-npm test                   # 69 testes (node:test), sem dependências
+npm test                   # 79 testes (node:test), sem dependências
 npm run validar            # integridade de projeto.json + lacunas.json
 npm run processar          # prévia do processamento de respostas (não altera nada)
 npm run processar:aplicar  # aplica (com backup) — usado pelo Claude Code
@@ -170,9 +170,17 @@ test/                   56 testes: unidade, integração HTTP, exportações, se
 - **PDF**: os relatórios são HTML formatado para impressão em A4. O PDF sai pelo "Salvar como PDF" do navegador; não há gerador de PDF no servidor.
 - **Sem detecção geométrica de interferências**: a compatibilização registra o que o Claude Code identificou.
 - **Sem autenticação**: o "autor" do histórico é o nome configurado no navegador.
-- O layout responsivo (≤960 px) foi implementado, mas **não pôde ser verificado visualmente** no navegador de teste. Veja "Testes".
+- O layout responsivo (≤960 px) foi implementado, mas **não pôde ser verificado visualmente** no navegador de teste (a janela não aceitou largura de celular).
+- **Áreas não medidas**: o quadro de ambientes do LOFT está vazio. A medição automática por segmentação de imagem foi testada e descartada por não ser confiável neste desenho (vazamento por janelas, vigas tracejadas e banheiros pequenos). As áreas devem ser medidas com a ferramenta **Área**.
+- **Versão publicada (GitHub Pages)**:
+  - os dados ficam no IndexedDB do navegador, sem backup em disco;
+  - duas abas abertas ao mesmo tempo podem sobrescrever a mesma lacuna;
+  - depois que o visitante edita o projeto de demonstração, a cópia dele no navegador prevalece sobre uma versão republicada;
+  - o IndexedDB é compartilhado por todos os sites em `<usuário>.github.io`;
+  - o PDF.js vem do cdnjs, com versão fixa e sem SRI, porque é import de módulo.
+- **Números**: os campos financeiros aceitam pt-BR. "1.250" é lido como mil duzentos e cinquenta, e "1.250,50" como 1.250,5. A altura do revestimento só vira quantidade de parede quando há um único número no texto.
 
 ## Testes
 
-- `npm test`: 69 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
+- `npm test`: 79 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
 - Testado no Chrome, pelo DOM: as 8 telas sem erros; prancha em 5617 px com 27 marcadores na p.2; foco centraliza o marcador no meio da viewport; o marcador mantém a posição relativa exata após zoom e arraste; 100% e ajustar funcionam; fluxo respondida → em validação → validação recusada sem evidência → validada; histórico com 3 eventos; conflito de revisão (409); busca preservando o foco; lote com confirmação; atalho J; relatórios com recortes; sincronização externa detectada em menos de 6 s.

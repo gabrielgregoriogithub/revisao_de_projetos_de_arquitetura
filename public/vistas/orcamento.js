@@ -1,7 +1,7 @@
 // Orçamento / EAP: prévia da árvore, seleção do que exportar (status e colunas), exportações e riscos.
 import { el, preferencia } from '../dom.js';
 import { estado } from '../estado.js';
-import { api, baixar, abrirRelatorio } from '../api.js';
+import { api, baixar, abrirRelatorio, ESTATICO } from '../api.js';
 import { botao, vazio, carregando, avisar } from '../componentes.js';
 import { STATUS, STATUS_INFO } from '/dominio/status.js';
 import { consolidarImpacto, formatarMoeda, TIPOS_IMPACTO, INCERTEZAS } from '/dominio/impacto.js';
@@ -35,7 +35,7 @@ export function montar(alvo, { navegar }) {
       el('div', { className: 'opcoes-export' }, colunasDisponiveis.map(([k, r]) => marca(cols, k,
         (v) => salvarOpcoes({ colunas: v ? [...cols, k] : cols.filter((x) => x !== k) }), r))),
       el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;margin-top:16px' }, [
-        botao('Exportar XLSX', { classe: 'pri', onclick: () => baixar('xlsx', qs()).catch((e) => avisar(e.message, { erro: true })) }),
+        botao('Exportar XLSX', { classe: 'pri', desativado: ESTATICO, titulo: ESTATICO ? 'XLSX disponível só na versão local (npm start). Use o CSV hierárquico.' : undefined, onclick: () => baixar('xlsx', qs()).catch((e) => avisar(e.message, { erro: true })) }),
         botao('CSV hierárquico', { onclick: () => baixar('hierarquica', qs()).catch((e) => avisar(e.message, { erro: true })) }),
         botao('CSV simples (v0.1)', { classe: 'fantasma', titulo: 'Formato original da v0.1 (compatibilidade)', onclick: () => baixar('csv').catch((e) => avisar(e.message, { erro: true })) })
       ])

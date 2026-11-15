@@ -13,7 +13,7 @@ await rm(SAIDA, { recursive: true, force: true });
 await mkdir(SAIDA, { recursive: true });
 
 // 1. Front-end e núcleo compartilhado
-await cp(path.join(RAIZ, 'public'), path.join(SAIDA, 'static'), { recursive: true });
+await cp(path.join(RAIZ, 'public'), path.join(SAIDA, 'static'), { recursive: true, filter: (f) => path.basename(f) !== 'index.html' });
 await cp(path.join(RAIZ, 'lib', 'dominio'), path.join(SAIDA, 'lib', 'dominio'), { recursive: true });
 for (const f of LIB) await cp(path.join(RAIZ, 'lib', f), path.join(SAIDA, 'lib', f));
 

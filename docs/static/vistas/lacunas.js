@@ -14,6 +14,7 @@ export function montar(alvo, { navegar, params }) {
   let selecao = new Set();
   let ativa = params.get('l') || null;
   let painel = { sujo: () => false };
+  let idDetalhe = null;
 
   const area = el('div', { className: 'lista-area' });
   const detalheCol = el('aside', { className: 'detalhe-col', 'aria-label': 'Detalhe da lacuna' });
@@ -27,6 +28,7 @@ export function montar(alvo, { navegar, params }) {
 
   async function abrir(id) {
     if (id !== ativa && !(await podeSair())) return;
+    if (id !== ativa) estado.definirSincronizacao('ok'); // alterações descartadas (ou não havia)
     ativa = id;
     history.replaceState(null, '', id ? `#/lacunas?l=${encodeURIComponent(id)}` : '#/lacunas');
     desenhar();
@@ -142,9 +144,14 @@ export function montar(alvo, { navegar, params }) {
     area.querySelectorAll('.grupo-botoes .botao').forEach((b) => b.setAttribute('aria-pressed', b.ariaPressed));
 
     raiz.classList.toggle('com-detalhe', Boolean(ativa));
-    painel = ativa
-      ? renderizarDetalhe(detalheCol, ativa, { aoVerMarcador: (m) => navegar('pranchas', { l: ativa, p: m.prancha }), aoNavegar: navegarLacuna, aoFechar: () => abrir(null), aoAbrir: (rid) => abrir(rid) })
-      : { sujo: () => false };
+    // Redesenhos da lista (filtros, seleção, modo, sincronização) nunca apagam um formulário com edições não salvas.
+    if (!ativa) {
+      painel = { sujo: () => false };
+      idDetalhe = null;
+    } else if (ativa !== idDetalhe || !painel.sujo()) {
+      painel = renderizarDetalhe(detalheCol, ativa, { aoVerMarcador: (m) => navegar('pranchas', { l: ativa, p: m.prancha }), aoNavegar: navegarLacuna, aoFechar: () => abrir(null), aoAbrir: (rid) => abrir(rid) });
+      idDetalhe = ativa;
+    }
   }
 
   desenhar();

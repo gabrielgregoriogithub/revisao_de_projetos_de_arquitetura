@@ -3,7 +3,8 @@
 .cab-vista { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .cab-vista h1 { margin: 0; font-size: var(--t-20); letter-spacing: -.015em; }
 .cab-vista p { margin: 2px 0 0; color: var(--tinta-3); }
-.cab-vista .acoes { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+.cab-vista .acoes { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.cab-vista .acoes select.entrada { width: auto; }
 
 /* ───────── Dashboard ───────── */
 .kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }

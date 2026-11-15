@@ -132,11 +132,15 @@ export function configuracoes(alvo) {
       ])]),
       el('section', { className: 'cartao c-6' }, [el('div', { className: 'cartao-cab' }, [el('h2', { textContent: 'Atalhos de teclado' })]), el('div', { className: 'cartao-corpo' }, [tabelaAtalhos()])]),
       el('section', { className: 'cartao c-12' }, [el('div', { className: 'cartao-cab' }, [el('h2', { textContent: 'Dados e segurança' })]), el('div', { className: 'cartao-corpo' }, [
-        el('ul', { className: 'problemas' }, [
+        el('ul', { className: 'problemas' }, (ESTATICO ? [
+          'Versão publicada: os dados ficam só no IndexedDB deste navegador (nada é enviado a servidor). Limpar os dados do site apaga respostas e projetos importados.',
+          'Use uma aba por vez: abas simultâneas podem sobrescrever a mesma lacuna nesta versão.',
+          'Para trabalho real com o cliente, use a versão local (npm start), com arquivos e backups no disco.'
+        ] : [
           'Servidor acessível só em 127.0.0.1; escrita exige origem local e JSON.',
-          'Respostas em dados/respostas.json, histórico em dados/historico.json, backups automáticos em dados/backups/.',
+          'Respostas em dados/projetos/<id>/respostas.json, histórico em historico.json, backups automáticos em backups/.',
           'Cada lacuna tem número de revisão: duas abas editando a mesma lacuna não se sobrescrevem (a segunda recebe aviso).'
-        ].map((t) => el('li', {}, [etiqueta('ok'), ` ${t}`])))
+        ]).map((t) => el('li', {}, [etiqueta('ok'), ` ${t}`])))
       ])])
     ])
   ]));

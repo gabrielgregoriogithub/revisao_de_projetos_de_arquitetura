@@ -15,13 +15,21 @@ import { STATUS } from './lib/dominio/status.js';
 import { CATEGORIAS } from './lib/dominio/lacunas.js';
 import { impactoEfetivo, TIPOS_IMPACTO } from './lib/dominio/impacto.js';
 import {
-  log, ErroHttp, enviarJson, enviar, servirArquivo, lerCorpo, lerBinario, exigirRequisicaoLocal, exigirUploadLocal, listaQuery
+  log, ErroHttp, enviarJson, enviar, servirArquivo, lerCorpo, lerBinario, exigirRequisicaoLocal, exigirUploadLocal, exigirHostLocal, listaQuery
 } from './lib/http.js';
 
 const RAIZ = path.dirname(fileURLToPath(import.meta.url));
 const ID = '([A-Za-z0-9_-]{1,20})';
 const XLSX_TIPO = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
+/** Decodifica um cabeçalho percent-encoded; valor malformado vira 400, não 500. */
+function cabecalho(req, nome) {
+  try {
+    return decodeURIComponent(String(req.headers[nome] ?? '')).trim();
+  } catch {
+    throw new ErroHttp(400, `Cabeçalho ${nome} inválido.`);
+  }
+}
 const slug = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50);
 const textoCurto = (v, max = 80) => (typeof v === 'string' ? v.trim().slice(0, max) : null) || null;
 
@@ -81,7 +89,8 @@ export function criarServidor({ dadosDir = path.join(RAIZ, 'dados') } = {}) {
     ['GET', /^\/$/, () => (req, res) => servirArquivo(res, publico, 'index.html')],
     ['GET', /^\/static\/(.+)$/, ([, f]) => (req, res) => servirArquivo(res, publico, f)],
     ['GET', /^\/dominio\/(.+)$/, ([, f]) => (req, res) => servirArquivo(res, dominio, f)],
-    ['GET', /^\/pranchas\/(.+)$/, ([, f]) => async (req, res) => servirArquivo(res, path.join((await ativo()).dir, 'pranchas'), f, { cache: true })],
+    // Rota do projeto ativo: sem cache, pois a mesma URL serve outra revisão depois de trocar o projeto.
+    ['GET', /^\/pranchas\/(.+)$/, ([, f]) => async (req, res) => servirArquivo(res, path.join((await ativo()).dir, 'pranchas'), f)],
     ['GET', /^\/p\/([a-z0-9-]{1,63})\/pranchas\/(.+)$/, ([, id, f]) => async (req, res) => {
       if (!ID_PROJETO.test(id)) throw new ErroHttp(404, 'Projeto inválido.');
       await catalogo.store(id);
@@ -101,7 +110,7 @@ export function criarServidor({ dadosDir = path.join(RAIZ, 'dados') } = {}) {
     ['POST', /^\/api\/projetos$/, () => async (req, res) => {
       exigirUploadLocal(req);
       if ((await catalogo.modo()) !== 'multi') throw new ErroHttp(409, 'Migre os dados para vários projetos antes (node scripts/migrar-projetos.js <id>).');
-      const cab = (n) => decodeURIComponent(String(req.headers[n] ?? '')).trim();
+      const cab = (n) => cabecalho(req, n);
       const nome = cab('x-nome-projeto').slice(0, 120);
       const revisao = cab('x-revisao').toUpperCase().slice(0, 10) || null;
       const obra = slug(cab('x-obra') || nome);
@@ -149,7 +158,7 @@ export function criarServidor({ dadosDir = path.join(RAIZ, 'dados') } = {}) {
     // Anexos (evidências)
     ['POST', /^\/api\/anexos$/, () => async (req, res) => {
       exigirUploadLocal(req);
-      const nome = decodeURIComponent(String(req.headers['x-nome-arquivo'] ?? 'anexo'));
+      const nome = cabecalho(req, 'x-nome-arquivo') || 'anexo';
       const r = await salvarAnexo((await ativo()).dir, await lerBinario(req, MAX_ANEXO), nome);
       if (r.ok) log('info', 'anexo salvo', { id: r.anexo.id, tamanho: r.anexo.tamanho });
       return responder(res, r, 'anexo');
@@ -158,7 +167,7 @@ export function criarServidor({ dadosDir = path.join(RAIZ, 'dados') } = {}) {
       if (!ID_ANEXO.test(id)) throw new ErroHttp(404, 'Anexo não encontrado.');
       const ext = id.split('.').pop();
       res.setHeader('Content-Security-Policy', 'sandbox; default-src \'none\'; img-src \'self\'; style-src \'unsafe-inline\'');
-      return servirArquivo(res, path.join((await ativo()).dir, 'anexos'), id, { tipo: TIPOS_ANEXO[ext], disposicao: ext === 'txt' ? 'attachment' : 'inline' });
+      return servirArquivo(res, path.join((await ativo()).dir, 'anexos'), id, { tipo: TIPOS_ANEXO[ext], disposicao: ['txt', 'pdf'].includes(ext) ? 'attachment' : 'inline' }); // PDF não abre sob CSP sandbox no Chrome: baixa
     }],
 
     // Quadro de ambientes e escala
@@ -228,7 +237,10 @@ export function criarServidor({ dadosDir = path.join(RAIZ, 'dados') } = {}) {
     }],
     ['GET', /^\/relatorios\/([a-z]+)$/, ([, tipo]) => async (req, res, url) => {
       if (!RELATORIOS[tipo]) throw new ErroHttp(404, 'Relatório não encontrado.');
-      return enviar(res, 200, 'text/html; charset=utf-8', gerarRelatorio(tipo, await carregarAtivo(), { recortes: url.searchParams.get('recortes') !== '0' }));
+      const a = await ativo();
+      return enviar(res, 200, 'text/html; charset=utf-8', gerarRelatorio(tipo, await a.store.carregar(), {
+        recortes: url.searchParams.get('recortes') !== '0', urlPrancha: (img) => `/p/${encodeURIComponent(a.id)}/pranchas/${encodeURIComponent(img)}`
+      }));
     }]
   ];
 
@@ -239,6 +251,7 @@ export function criarServidor({ dadosDir = path.join(RAIZ, 'dados') } = {}) {
     res.setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'");
     let rota = '';
     try {
+      exigirHostLocal(req);
       let url;
       try {
         url = new URL(req.url, 'http://localhost');

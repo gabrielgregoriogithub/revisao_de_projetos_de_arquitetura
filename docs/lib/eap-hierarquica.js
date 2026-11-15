@@ -4,6 +4,7 @@ import { impactoEfetivo } from './dominio/impacto.js';
 import { DISCIPLINAS } from './dominio/lacunas.js';
 import { STATUS_INFO } from './dominio/status.js';
 import { chaveAmbiente } from './dominio/geometria.js';
+import { metrosDeTexto } from './dominio/numeros.js';
 
 const GRUPOS = {
   pisos: 'Pisos',
@@ -29,11 +30,6 @@ export const COLUNAS_EAP = [
 
 const pad = (n) => String(n).padStart(2, '0');
 
-const numeroEm = (t) => {
-  const m = String(t ?? '').replace(',', '.').match(/(\d+(?:\.\d+)?)/);
-  return m ? Number(m[1]) : null;
-};
-
 /**
  * Quantidade derivada da geometria medida (quadro de ambientes). Só quando há medida real:
  * pisos/forros = área; revestimento de parede = perímetro × altura numérica informada na resposta.
@@ -46,8 +42,9 @@ function quantidadeMedida(linha, ambientesPorChave) {
     return { quantidade: amb.medida.area, unidade: 'm²', fonte };
   }
   if (linha.grupo === 'revestimentos' && linha.campo.chave === 'parede') {
-    const altura = numeroEm(linha.lacuna.resposta.campos?.altura);
-    if (altura && altura < 20) {
+    const altura = metrosDeTexto(linha.lacuna.resposta.campos?.altura);
+    if (altura === null) return { quantidade: null, unidade: null, fonte: null, aviso: 'Altura do revestimento ambígua ou não numérica: quantidade de parede não calculada.' };
+    if (altura < 20) {
       return { quantidade: Math.round(amb.medida.perimetro * altura * 100) / 100, unidade: 'm²', fonte: `perímetro medido (${amb.id}) × altura ${altura} m, sem desconto de vãos` };
     }
   }
@@ -106,12 +103,12 @@ export function montarEap(projeto, lacunas, { incluir = STATUS_PADRAO_EAP, ambie
     }
     cont.s += 1;
     const imp = s.impacto;
-    const med = s.medida;
+    const med = s.medida?.quantidade !== null && s.medida?.quantidade !== undefined ? s.medida : null;
     const quantidade = med?.quantidade ?? imp?.quantidade ?? null;
     const custoUnitario = imp?.custoUnitario ?? null;
     const custoTotal = med && custoUnitario !== null ? Math.round(quantidade * custoUnitario * 100) / 100 : (imp?.tipo === 'calculado' ? imp.valor : null);
     const obs = [
-      med ? `Quantidade: ${med.fonte}.` : null,
+      med ? `Quantidade: ${med.fonte}.` : (s.medida?.aviso ?? null),
       s.multiplas && !med ? `Quantitativo da ${s.lacuna.id} não distribuído entre os serviços.` : null,
       imp?.tipo === 'estimado' ? `Valor global estimado da lacuna: R$ ${imp.valor} (${imp.justificativa}).` : null,
       s.lacuna.resposta.status !== 'validada' ? 'Especificação ainda não validada tecnicamente.' : null

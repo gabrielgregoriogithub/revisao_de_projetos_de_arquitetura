@@ -38,7 +38,7 @@ export function montar(alvo, { navegar }) {
     const { ambientes, lacunas, projeto } = estado;
     const lacunasDe = (nome) => lacunas.filter((l) => l.ambientes.some((x) => chaveAmbiente(x) === chaveAmbiente(nome)));
     const medidos = new Set(ambientes.map((a) => chaveAmbiente(a.nome)));
-    const citados = [...new Set(lacunas.flatMap((l) => l.ambientes))].filter((n) => !medidos.has(chaveAmbiente(n)) && n !== 'Documentação' && n !== 'Diversos');
+    const citados = [...new Set(lacunas.flatMap((l) => l.ambientes))].filter((n) => !medidos.has(chaveAmbiente(n)));
     const total = ambientes.reduce((t, a) => t + (a.medida.area ?? 0), 0);
     const esc = projeto.escala;
 
@@ -66,7 +66,7 @@ export function montar(alvo, { navegar }) {
           } })
         ])])
       ])))
-    ]) : vazio('Nenhum ambiente medido', 'Na tela Pranchas, use "Medir área" e clique nos cantos do ambiente. As áreas alimentam a EAP.', 'ajustar');
+    ]) : vazio('Nenhum ambiente medido', 'Na tela Pranchas, use a ferramenta "Área" e clique nos cantos do ambiente. As áreas alimentam a EAP.', 'ajustar');
 
     alvo.replaceChildren(el('div', { className: 'vista-pad' }, [
       el('header', { className: 'cab-vista' }, [

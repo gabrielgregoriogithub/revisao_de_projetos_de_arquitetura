@@ -7,9 +7,10 @@ import { seloStatus, etiquetaPrioridade, etiqueta, botao, avisar, confirmar, vaz
 import { STATUS_INFO, proximosStatus, transicaoPermitida } from '/dominio/status.js';
 import { CATEGORIAS, DISCIPLINAS } from '/dominio/lacunas.js';
 import { impactoEfetivo, TIPOS_IMPACTO, INCERTEZAS, formatarMoeda } from '/dominio/impacto.js';
+import { lerNumeroBr } from '/dominio/numeros.js';
 
 const ACAO = {
-  respondida: { rotulo: 'Devolver para o Claude', classe: 'pri', ic: 'check' },
+  respondida: { rotulo: ESTATICO ? 'Registrar resposta' : 'Devolver para o Claude', classe: 'pri', ic: 'check' },
   pendente: { rotulo: 'Marcar pendente' },
   em_validacao: { rotulo: 'Enviar para validação', classe: 'pri' },
   validada: { rotulo: 'Validar tecnicamente', classe: 'pri', ic: 'check', confirmar: 'Confirma que a especificação foi conferida com evidência? Ela passará a ser tratada como informação técnica confirmada.' },
@@ -167,9 +168,9 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
   const ib = { ...l.impactoFinanceiro, ...(r.impacto ?? {}) };
   const totalEl = el('div', { className: 'impacto-total' });
   const atualizarTotal = () => {
-    const q = Number(String(raiz.elements['imp:quantidade']?.value ?? '').replace(',', '.'));
-    const c = Number(String(raiz.elements['imp:custoUnitario']?.value ?? '').replace(',', '.'));
-    const ve = Number(String(raiz.elements['imp:valorEstimado']?.value ?? '').replace(',', '.'));
+    const q = lerNumeroBr(raiz.elements['imp:quantidade']?.value);
+    const c = lerNumeroBr(raiz.elements['imp:custoUnitario']?.value);
+    const ve = lerNumeroBr(raiz.elements['imp:valorEstimado']?.value);
     const temQ = raiz.elements['imp:quantidade']?.value && raiz.elements['imp:custoUnitario']?.value;
     const [tipo, valor] = temQ && Number.isFinite(q * c) ? ['calculado', q * c]
       : raiz.elements['imp:valorEstimado']?.value && Number.isFinite(ve) ? ['estimado', ve] : ['nao_quantificado', null];
@@ -217,12 +218,15 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
     };
   };
 
+  let emAndamento = false;
   async function salvar(status) {
+    if (emAndamento) return; // Ctrl+S repetido durante o envio geraria um falso conflito de revisão
     const a = ACAO[status];
     if (a?.confirmar && status !== r.status && !(await confirmar({ titulo: a.rotulo, texto: a.confirmar, confirmar: a.rotulo, perigo: status === 'reaberta' }))) return;
     const botoes = [...raiz.querySelectorAll('.acoes-status button')];
     botoes.forEach((b) => { b.disabled = true; });
     estado.definirSincronizacao('salvando');
+    emAndamento = true;
     try {
       const nova = await api.salvar(l.id, coletar(status));
       sujo = false;
@@ -235,6 +239,8 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
       estado.definirSincronizacao('erro');
       avisar(erro.message, { erro: true, duracao: 7000 });
       botoes.forEach((b) => { b.disabled = false; });
+    } finally {
+      emAndamento = false;
     }
   }
 

@@ -1,6 +1,6 @@
 // Comparação de revisões (ex.: R00 × R01): lacunas resolvidas/novas/mantidas e diferença visual das pranchas.
 import { el } from '../dom.js';
-import { api, urlPrancha } from '../api.js';
+import { api, urlPrancha, ESTATICO } from '../api.js';
 import { estado } from '../estado.js';
 import { botao, vazio, carregando, seloStatus, etiqueta, avisar } from '../componentes.js';
 
@@ -17,8 +17,9 @@ export function montar(alvo) {
     try { lista = (await api.projetos()).projetos; } catch (erro) { corpo.replaceChildren(vazio('Falha ao listar projetos', erro.message, 'alerta')); return; }
     if (lista.length < 2) {
       corpo.replaceChildren(el('div', { className: 'aviso-futuro' }, [el('span', { textContent:
-        `Há só uma revisão cadastrada (${lista[0]?.revisao ?? lista[0]?.id}). Quando chegar a próxima, peça ao Claude Code: "crie a revisão R01 a partir do PDF X e analise". `
-        + 'Ele roda scripts/novo-projeto.js com a mesma obra e gera as lacunas. A comparação aparece aqui.' })]));
+        `Há só uma revisão cadastrada (${lista[0]?.revisao ?? lista[0]?.id}). `
+        + (ESTATICO ? 'Importe a próxima revisão em Projeto › Base de pranchas (mesmo nome, revisão R01) e a comparação aparece aqui.'
+          : 'Quando chegar a próxima, importe em Projeto › Base de pranchas ou peça ao Claude Code: "crie a revisão R01 a partir do PDF X e analise". A comparação aparece aqui.') })]));
       return;
     }
     const opcao = (p, sel) => el('option', { value: p.id, selected: sel, textContent: `${p.nome} · ${p.revisao ?? p.etapa} (${p.id})` });
