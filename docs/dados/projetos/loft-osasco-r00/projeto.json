@@ -1,0 +1,48 @@
+{
+  "nome": "LOFT – Osasco",
+  "etapa": "EP – Estudo Preliminar R00",
+  "arquivo": "2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+  "analisadoEm": "2026-11-15",
+  "obra": "Escritório Loft – 15º andar",
+  "endereco": "Av. Domingos Odália Filho, 301 – 15º andar (município a confirmar, ver L14)",
+  "autorProjeto": "Eduardo Maximo Arq. e Engenharia – projetista Ana Ligia",
+  "dataProjeto": "10/11/2026",
+  "referencia": {
+    "largura": 1873,
+    "altura": 1325
+  },
+  "pranchas": [
+    {
+      "numero": 1,
+      "titulo": "Demolir | Construir e Layout",
+      "folha": "01",
+      "imagem": "prancha-1.png",
+      "miniatura": "prancha-1-mini.png",
+      "resolucaoDpi": 120
+    },
+    {
+      "numero": 2,
+      "titulo": "Layout e Acabamentos",
+      "folha": "03",
+      "imagem": "prancha-2.png",
+      "miniatura": "prancha-2-mini.png",
+      "resolucaoDpi": 120
+    },
+    {
+      "numero": 3,
+      "titulo": "Iluminação e Elétrica",
+      "folha": "03",
+      "imagem": "prancha-3.png",
+      "miniatura": "prancha-3-mini.png",
+      "resolucaoDpi": 120
+    }
+  ],
+  "revisao": "R00",
+  "obraId": "loft-osasco",
+  "escala": {
+    "metrosPorRef": 0.047625,
+    "origem": "ESCALA 1:75 declarada nos títulos dos desenhos (papel A0: 1189 mm = 1873 ref). Conferida por elementos padronizados: piso dos degraus da escada = 0,27 m (42,5 px a 300 dpi), compatível com Blondel; Sala de Reunião 05 ≈ 4,57 × 3,57 m. As pranchas não têm cotas para calibração formal.",
+    "calibrada": false,
+    "atualizadaEm": "2026-11-15T17:49:00.715Z"
+  }
+}

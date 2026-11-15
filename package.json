@@ -1,0 +1,18 @@
+{
+  "name": "lacunas-app",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Lacunas.obra – inteligência de projetos: lacunas, compatibilização, rastreabilidade e EAP de orçamento.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "validar": "node scripts/validar.js",
+    "processar": "node scripts/processar.js",
+    "processar:aplicar": "node scripts/processar.js --aplicar",
+    "site": "node scripts/gerar-site.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

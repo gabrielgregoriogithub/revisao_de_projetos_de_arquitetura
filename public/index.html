@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lacunas.obra</title>
+  <meta name="description" content="Inteligência de projetos: lacunas, compatibilização, rastreabilidade e EAP de orçamento.">
+  <link rel="stylesheet" href="/static/base.css">
+  <link rel="stylesheet" href="/static/vistas.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <nav class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="logo" id="logo"><span>Lacunas<b>.obra</b></span></div>
+      <div class="nav" id="nav"></div>
+      <div class="sidebar-rodape" id="sidebar-rodape"></div>
+    </nav>
+    <div class="principal">
+      <header class="topo">
+        <button type="button" class="botao fantasma icone topo-menu" id="botao-menu" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false"></button>
+        <div class="topo-projeto"><strong id="topo-nome">Carregando…</strong><span id="topo-obra"></span></div>
+        <div class="topo-progresso" id="topo-progresso"></div>
+        <span class="sync" id="sync" data-estado="ok" role="status" aria-live="polite">Sincronizado</span>
+        <div class="topo-acoes" id="topo-acoes"></div>
+      </header>
+      <main class="vista" id="vista" tabindex="-1"></main>
+    </div>
+  </div>
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>

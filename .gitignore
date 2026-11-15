@@ -1,0 +1,8 @@
+# PDFs de projeto nunca vão para o repositório (os usuários importam os seus no navegador)
+*.pdf
+# Cópias de segurança locais e dados gerados em uso
+dados-backup-*/
+dados/projetos/*/anexos/
+dados/projetos/*/processamentos/
+*.tmp
+node_modules/

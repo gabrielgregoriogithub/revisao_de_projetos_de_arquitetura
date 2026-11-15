@@ -1,0 +1,31 @@
+{
+  "versao": 1,
+  "eventos": [
+    {
+      "id": "ecb2c2cd-ce35-4be2-95c7-552f748a221e",
+      "em": "2026-11-15T17:49:00.746Z",
+      "lacuna": null,
+      "origem": "app",
+      "autor": "Claude Code",
+      "acao": "escala",
+      "prancha": null,
+      "alteracoes": [
+        {
+          "campo": "escala",
+          "antes": {
+            "metrosPorRef": 0.047625,
+            "origem": "ESCALA 1:75 declarada nos títulos dos desenhos; papel A0 (1189 mm = 1873 ref). Conferência: Sala de Reunião 05 ≈ 4,57 × 3,57 m. Recomenda-se calibrar com uma cota.",
+            "calibrada": false,
+            "atualizadaEm": "2026-11-15T17:03:18.781Z"
+          },
+          "depois": {
+            "metrosPorRef": 0.047625,
+            "origem": "ESCALA 1:75 declarada nos títulos dos desenhos (papel A0: 1189 mm = 1873 ref). Conferida por elementos padronizados: piso dos degraus da escada = 0,27 m (42,5 px a 300 dpi), compatível com Blondel; Sala de Reunião 05 ≈ 4,57 × 3,57 m. As pranchas não têm cotas para calibração formal.",
+            "calibrada": false,
+            "atualizadaEm": "2026-11-15T17:49:00.715Z"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,962 @@
+[
+  {
+    "id": "L01",
+    "titulo": "Banheiros sem revestimento de piso e parede",
+    "categoria": "revestimento",
+    "prioridade": "alta",
+    "onde": "Prancha 03 (Acabamentos) – todos os banheiros (6 núcleos)",
+    "problema": "Os banheiros têm apenas forro F01 (gesso, PD 2,50 m). Não há símbolo de acabamento de parede nem de piso, e nenhuma legenda trata de revestimento cerâmico ou porcelanato para área molhada.",
+    "pergunta": "Qual o piso dos banheiros? A parede leva revestimento? Até que altura (meia parede ou até o forro)?",
+    "impacto": "Revestimento de área molhada é um dos itens mais caros por m² da obra. Sem isso não dá para orçar nem comprar.",
+    "campos": [
+      {
+        "chave": "piso",
+        "rotulo": "Piso"
+      },
+      {
+        "chave": "parede",
+        "rotulo": "Revestimento de parede"
+      },
+      {
+        "chave": "altura",
+        "rotulo": "Altura do revestimento (m)"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 802,
+        "y": 1066,
+        "w": 65,
+        "h": 29
+      },
+      {
+        "prancha": 2,
+        "x": 341,
+        "y": 1050,
+        "w": 129,
+        "h": 34
+      },
+      {
+        "prancha": 2,
+        "x": 1306,
+        "y": 777,
+        "w": 130,
+        "h": 35
+      },
+      {
+        "prancha": 2,
+        "x": 340,
+        "y": 972,
+        "w": 130,
+        "h": 48
+      },
+      {
+        "prancha": 2,
+        "x": 580,
+        "y": 977,
+        "w": 35,
+        "h": 43
+      },
+      {
+        "prancha": 2,
+        "x": 1159,
+        "y": 859,
+        "w": 33,
+        "h": 30
+      }
+    ],
+    "ambientes": [
+      "Banheiros"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos"
+    ],
+    "relacionadas": [
+      "L09"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Revestimento cerâmico/porcelanato em área molhada",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    },
+    "evidenciaPdf": "Camada de texto do PDF (pdftotext): nenhum símbolo \"A\" de acabamento de parede dentro dos 6 núcleos de banheiro, embora a prancha tenha 37 símbolos \"A\". Os banheiros só têm o símbolo de forro F01."
+  },
+  {
+    "id": "L02",
+    "titulo": "Copas: parede da bancada só com pintura",
+    "categoria": "revestimento",
+    "prioridade": "alta",
+    "onde": "Prancha 03 (Acabamentos) – copa norte e copa sul",
+    "problema": "A parede atrás das bancadas e da pia tem só o símbolo A (pintura branco neve). Não há revestimento lavável especificado na faixa da bancada.",
+    "pergunta": "A parede da bancada das copas leva revestimento? Qual material e até que altura?",
+    "impacto": "Afeta revestimento, rejunte, mão de obra de assentamento e o prazo da marcenaria.",
+    "campos": [
+      {
+        "chave": "parede",
+        "rotulo": "Revestimento da bancada"
+      },
+      {
+        "chave": "altura",
+        "rotulo": "Altura (m)"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 622,
+        "y": 755,
+        "w": 55,
+        "h": 75
+      },
+      {
+        "prancha": 2,
+        "x": 610,
+        "y": 1047,
+        "w": 65,
+        "h": 143
+      }
+    ],
+    "ambientes": [
+      "Copa norte",
+      "Copa sul"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos"
+    ],
+    "relacionadas": [
+      "L03"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Revestimento de parede da bancada",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L03",
+    "titulo": "Copa sul: piso quadriculado sem legenda",
+    "categoria": "piso",
+    "prioridade": "media",
+    "onde": "Prancha 03 (Acabamentos) – copa sul, junto à bancada",
+    "problema": "O piso da copa sul está desenhado com uma paginação quadriculada. Ela não corresponde a nenhum item da legenda de piso, que só tem vinílico 01 e o vinílico novo hachurado.",
+    "pergunta": "Que piso é esse da copa sul? É existente ou novo? Qual o formato da peça?",
+    "impacto": "Sem a definição, o quantitativo e o tipo de assentamento ficam indefinidos.",
+    "campos": [
+      {
+        "chave": "piso",
+        "rotulo": "Piso"
+      },
+      {
+        "chave": "formato",
+        "rotulo": "Formato / paginação"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 646,
+        "y": 1047,
+        "w": 30,
+        "h": 143
+      }
+    ],
+    "ambientes": [
+      "Copa sul"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos"
+    ],
+    "relacionadas": [
+      "L02"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Piso da copa sul",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L04",
+    "titulo": "Áreas de staff e circulação sem piso definido",
+    "categoria": "piso",
+    "prioridade": "alta",
+    "onde": "Prancha 03 (Acabamentos) – todas as áreas de staff, circulações, halls e depósitos",
+    "problema": "Só as salas de reunião e parte do auditório têm hachura de piso. O restante dos ambientes, que é a maior parte da área do andar, não tem símbolo de piso. Não fica claro se o piso existente será mantido.",
+    "pergunta": "O piso das áreas de staff e circulações é existente e será mantido? Se for trocado, por qual?",
+    "impacto": "É a maior área do pavimento. Muda completamente o orçamento de piso.",
+    "campos": [
+      {
+        "chave": "piso",
+        "rotulo": "Piso"
+      },
+      {
+        "chave": "situacao",
+        "rotulo": "Existente mantido / novo"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 1052,
+        "y": 675,
+        "w": 98,
+        "h": 168
+      },
+      {
+        "prancha": 2,
+        "x": 1267,
+        "y": 700,
+        "w": 98,
+        "h": 70
+      },
+      {
+        "prancha": 2,
+        "x": 185,
+        "y": 880,
+        "w": 110,
+        "h": 130
+      }
+    ],
+    "ambientes": [
+      "Áreas de staff",
+      "Circulações",
+      "Halls",
+      "Depósitos"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos"
+    ],
+    "relacionadas": [
+      "L08"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Piso das áreas de staff e circulação",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L05",
+    "titulo": "Piso vinílico 01 – cor a definir",
+    "categoria": "piso",
+    "prioridade": "media",
+    "onde": "Prancha 03 – Legenda de acabamento de piso, e símbolo 01 na copa norte",
+    "problema": "A própria legenda diz \"PISO VINÍLICO – COR A DEFINIR\".",
+    "pergunta": "Qual a cor, linha e fabricante do vinílico 01? É régua ou manta?",
+    "impacto": "Necessário para cotação com fornecedores e prazo de entrega.",
+    "campos": [
+      {
+        "chave": "produto",
+        "rotulo": "Fabricante / linha / cor"
+      },
+      {
+        "chave": "formato",
+        "rotulo": "Régua ou manta"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 1198,
+        "y": 1160,
+        "w": 180,
+        "h": 20
+      },
+      {
+        "prancha": 2,
+        "x": 640,
+        "y": 812,
+        "w": 16,
+        "h": 16
+      }
+    ],
+    "ambientes": [
+      "Copa norte"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos"
+    ],
+    "relacionadas": [
+      "L06",
+      "L07"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Piso vinílico 01",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L06",
+    "titulo": "Vinílico novo: confirmar modelo com o condomínio",
+    "categoria": "piso",
+    "prioridade": "media",
+    "onde": "Prancha 03 – salas de reunião, sala de reunião 05 e parte do auditório (hachura marrom)",
+    "problema": "A legenda diz \"NOVO VINÍLICO (CONFIRMAR COM O CONDOMÍNIO O MODELO DO VINÍLICO EXISTENTE)\". A especificação depende de uma confirmação externa ainda pendente.",
+    "pergunta": "O condomínio já confirmou o modelo do vinílico existente? Qual é?",
+    "impacto": "Se o modelo for descontinuado, pode ser preciso trocar o piso de áreas maiores.",
+    "campos": [
+      {
+        "chave": "produto",
+        "rotulo": "Modelo confirmado"
+      },
+      {
+        "chave": "fonte",
+        "rotulo": "Quem confirmou / quando"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 724,
+        "y": 675,
+        "w": 71,
+        "h": 137
+      },
+      {
+        "prancha": 2,
+        "x": 1052,
+        "y": 1119,
+        "w": 99,
+        "h": 68
+      },
+      {
+        "prancha": 2,
+        "x": 517,
+        "y": 1052,
+        "w": 100,
+        "h": 136
+      }
+    ],
+    "ambientes": [
+      "Salas de reunião",
+      "Sala de reunião 05",
+      "Auditório"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos"
+    ],
+    "relacionadas": [
+      "L05",
+      "L07"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Piso vinílico novo",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L07",
+    "titulo": "Auditório: piso definido só em um terço da área",
+    "categoria": "inconsistencia",
+    "prioridade": "alta",
+    "onde": "Prancha 03 (Acabamentos) × Prancha 01 (Layout auditório)",
+    "problema": "No layout (prancha 01) o auditório ocupa três vãos, com cadeiras em arco. Na planta de acabamentos só o vão da direita tem vinílico novo. Os outros dois vãos não têm piso definido, e o vão da esquerda nem tem nome de ambiente.",
+    "pergunta": "O vinílico novo vale para o auditório inteiro? Qual o nome do ambiente do vão esquerdo?",
+    "impacto": "A área do piso do auditório pode triplicar.",
+    "campos": [
+      {
+        "chave": "piso",
+        "rotulo": "Piso do auditório inteiro"
+      },
+      {
+        "chave": "ambiente",
+        "rotulo": "Nome do vão esquerdo"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 303,
+        "y": 1084,
+        "w": 206,
+        "h": 104
+      },
+      {
+        "prancha": 1,
+        "x": 305,
+        "y": 1100,
+        "w": 320,
+        "h": 140
+      }
+    ],
+    "ambientes": [
+      "Auditório"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos"
+    ],
+    "relacionadas": [
+      "L06",
+      "L15"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Piso do auditório",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L08",
+    "titulo": "Teto em laje aparente sem tratamento definido",
+    "categoria": "forro",
+    "prioridade": "media",
+    "onde": "Prancha 03 – áreas de staff, circulações, halls, copas (PD 2,99 m / 2,97 m – LAJE)",
+    "problema": "Os ambientes indicados como LAJE não têm símbolo de forro nem de acabamento de teto. Não fica claro se a laje fica aparente, pintada, ou se as instalações serão aparentes.",
+    "pergunta": "A laje leva pintura? Qual cor? As instalações (elétrica, ar, sprinklers) ficam aparentes e também serão pintadas?",
+    "impacto": "Pintura de teto em laje com instalações aparentes custa bem mais que a de forro liso.",
+    "campos": [
+      {
+        "chave": "teto",
+        "rotulo": "Acabamento do teto"
+      },
+      {
+        "chave": "instalacoes",
+        "rotulo": "Instalações aparentes?"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 1083,
+        "y": 731,
+        "w": 49,
+        "h": 30.4
+      },
+      {
+        "prancha": 2,
+        "x": 783,
+        "y": 1123,
+        "w": 44,
+        "h": 28.2
+      }
+    ],
+    "ambientes": [
+      "Áreas de staff",
+      "Circulações",
+      "Halls",
+      "Copas"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "forros"
+    ],
+    "relacionadas": [
+      "L04"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Acabamento de teto em laje aparente",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L09",
+    "titulo": "Halls dos banheiros sem acabamento de parede",
+    "categoria": "parede",
+    "prioridade": "baixa",
+    "onde": "Prancha 03 – halls de acesso dos núcleos de banheiro",
+    "problema": "Os halls (PD 2,99 m, laje) não têm o símbolo A de pintura nem outro símbolo de parede. Só o contorno externo do núcleo está em Pantone 165C.",
+    "pergunta": "A parede interna dos halls é pintura branco neve (A) ou outra?",
+    "impacto": "Item pequeno, mas precisa entrar no quantitativo de pintura.",
+    "campos": [
+      {
+        "chave": "parede",
+        "rotulo": "Acabamento de parede"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 342,
+        "y": 975,
+        "w": 25,
+        "h": 40
+      },
+      {
+        "prancha": 2,
+        "x": 440,
+        "y": 975,
+        "w": 30,
+        "h": 40
+      }
+    ],
+    "ambientes": [
+      "Halls dos banheiros"
+    ],
+    "disciplinas": [
+      "arquitetura"
+    ],
+    "relacionadas": [
+      "L01"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Pintura de parede",
+      "unidade": "m²",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    },
+    "evidenciaPdf": "Camada de texto do PDF (pdftotext): nenhum símbolo \"A\" dentro dos halls dos núcleos de banheiro (37 símbolos \"A\" na prancha)."
+  },
+  {
+    "id": "L10",
+    "titulo": "Sala de amamentação sem especificação",
+    "categoria": "revestimento",
+    "prioridade": "media",
+    "onde": "Prancha 03 – Sala de amamentação (PD 2,99)",
+    "problema": "A sala tem bancada com pia, mas só o símbolo A de pintura. Faltam piso, revestimento da bancada e forro.",
+    "pergunta": "Qual o piso, o revestimento da bancada e o teto da sala de amamentação?",
+    "impacto": "Ambiente com exigência sanitária. Material lavável costuma ser obrigatório.",
+    "campos": [
+      {
+        "chave": "piso",
+        "rotulo": "Piso"
+      },
+      {
+        "chave": "parede",
+        "rotulo": "Revestimento bancada"
+      },
+      {
+        "chave": "teto",
+        "rotulo": "Teto / forro"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 746,
+        "y": 1054,
+        "w": 34,
+        "h": 41
+      }
+    ],
+    "ambientes": [
+      "Sala de amamentação"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "revestimentos",
+      "hidraulica"
+    ],
+    "relacionadas": [],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Acabamentos da sala de amamentação",
+      "unidade": "vb",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L11",
+    "titulo": "Sala de dados: PD diferente e sem piso técnico",
+    "categoria": "inconsistencia",
+    "prioridade": "baixa",
+    "onde": "Prancha 03 – Sala dados / Prancha 03 elétrica – Sala de dados (rack)",
+    "problema": "A sala de dados aparece com PD=3,00 m, enquanto todos os ambientes em laje vizinhos têm 2,99 m. Também não há definição de piso (elevado, antiestático?) nem de climatização para o rack.",
+    "pergunta": "O PD de 3,00 m está correto? A sala de dados leva piso técnico ou antiestático?",
+    "impacto": "Pode exigir piso elevado e ar-condicionado dedicado.",
+    "campos": [
+      {
+        "chave": "pd",
+        "rotulo": "PD correto (m)"
+      },
+      {
+        "chave": "piso",
+        "rotulo": "Piso"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 731,
+        "y": 1099,
+        "w": 49,
+        "h": 91
+      },
+      {
+        "prancha": 3,
+        "x": 745,
+        "y": 490,
+        "w": 50,
+        "h": 90
+      }
+    ],
+    "ambientes": [
+      "Sala de dados"
+    ],
+    "disciplinas": [
+      "arquitetura",
+      "eletrica",
+      "hvac"
+    ],
+    "relacionadas": [],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Piso técnico e climatização da sala de dados",
+      "unidade": "vb",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L12",
+    "titulo": "Hachura cinza sem legenda nos depósitos",
+    "categoria": "inconsistencia",
+    "prioridade": "baixa",
+    "onde": "Prancha 03 – passagem entre os depósitos (sudeste)",
+    "problema": "Há um retângulo hachurado em cinza entre os depósitos que não corresponde a nenhum item das legendas.",
+    "pergunta": "O que é esse elemento (shaft, armário, piso diferente)?",
+    "impacto": "Item indefinido. Pode ser serviço não orçado.",
+    "campos": [
+      {
+        "chave": "descricao",
+        "rotulo": "O que é"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 1051,
+        "y": 1052,
+        "w": 31,
+        "h": 11
+      }
+    ],
+    "ambientes": [
+      "Depósitos"
+    ],
+    "disciplinas": [
+      "arquitetura"
+    ],
+    "relacionadas": [],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Elemento não identificado",
+      "unidade": "vb",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L13",
+    "titulo": "Numeração de folhas repetida (folha 02 ausente)",
+    "categoria": "documentacao",
+    "prioridade": "media",
+    "onde": "Carimbos das pranchas",
+    "problema": "As três pranchas estão numeradas 01, 03 e 03. \"Layout e Acabamentos\" e \"Iluminação e Elétrica\" têm o mesmo nº de folha, e não existe folha 02.",
+    "pergunta": "Falta uma prancha no conjunto ou é erro de numeração? Qual é a folha 02?",
+    "impacto": "Risco de estar trabalhando com o conjunto incompleto.",
+    "campos": [
+      {
+        "chave": "resposta",
+        "rotulo": "Esclarecimento"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 2,
+        "x": 1735,
+        "y": 1258,
+        "w": 30,
+        "h": 22
+      },
+      {
+        "prancha": 3,
+        "x": 1735,
+        "y": 1258,
+        "w": 30,
+        "h": 22
+      }
+    ],
+    "ambientes": [
+      "Documentação"
+    ],
+    "disciplinas": [
+      "arquitetura"
+    ],
+    "relacionadas": [
+      "L14"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": null,
+      "unidade": null,
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Item documental, sem serviço de obra associado."
+    }
+  },
+  {
+    "id": "L14",
+    "titulo": "Cidade divergente no carimbo",
+    "categoria": "documentacao",
+    "prioridade": "baixa",
+    "onde": "Carimbos das pranchas – campos projeto e endereço",
+    "problema": "O projeto se chama \"LOFT – OSASCO\", mas o endereço diz \"Av. Domingos Odália Filho, 301 | SÃO PAULO\". Essa avenida fica em Osasco.",
+    "pergunta": "Confirmar o município da obra. Isso afeta ART/RRT, alvará e ISS.",
+    "impacto": "Documental: alvará, ART/RRT e tributação municipal.",
+    "campos": [
+      {
+        "chave": "municipio",
+        "rotulo": "Município correto"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 1,
+        "x": 1605,
+        "y": 1262,
+        "w": 90,
+        "h": 20
+      },
+      {
+        "prancha": 2,
+        "x": 1605,
+        "y": 1262,
+        "w": 90,
+        "h": 20
+      }
+    ],
+    "ambientes": [
+      "Documentação"
+    ],
+    "disciplinas": [
+      "arquitetura"
+    ],
+    "relacionadas": [
+      "L13"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Taxas e tributos municipais (alvará, ART/RRT, ISS)",
+      "unidade": "vb",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L15",
+    "titulo": "Iluminação do auditório – confirmar modelo",
+    "categoria": "iluminacao",
+    "prioridade": "media",
+    "onde": "Prancha 03 (Iluminação) – legenda e auditório",
+    "problema": "A legenda diz \"NOVA ILUMINAÇÃO AUDITÓRIO (CONFIRMAR MODELO)\". Não há modelo, potência, temperatura de cor nem quantidade.",
+    "pergunta": "Qual o modelo das luminárias do auditório (fabricante, potência, temperatura de cor, quantidade)?",
+    "impacto": "Necessário para orçar luminárias, pontos e circuitos.",
+    "campos": [
+      {
+        "chave": "modelo",
+        "rotulo": "Modelo / fabricante"
+      },
+      {
+        "chave": "quantidade",
+        "rotulo": "Quantidade"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 3,
+        "x": 1218,
+        "y": 1100,
+        "w": 185,
+        "h": 16
+      },
+      {
+        "prancha": 3,
+        "x": 310,
+        "y": 1140,
+        "w": 320,
+        "h": 100
+      }
+    ],
+    "ambientes": [
+      "Auditório"
+    ],
+    "disciplinas": [
+      "iluminacao",
+      "eletrica"
+    ],
+    "relacionadas": [
+      "L07"
+    ],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Luminárias do auditório",
+      "unidade": "un",
+      "quantidade": null,
+      "origemQuantidade": null,
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  },
+  {
+    "id": "L16",
+    "titulo": "Pendentes reaproveitados de outros andares",
+    "categoria": "iluminacao",
+    "prioridade": "baixa",
+    "onde": "Prancha 03 (Iluminação) – legenda: item 12 (6º andar, 5 un.) e item 20 (1º andar, 2 un.)",
+    "problema": "Os pendentes vêm de outros andares. O projeto não diz quem retira, transporta e reinstala, nem se as peças estão em bom estado.",
+    "pergunta": "As 7 peças estão disponíveis e em bom estado? A desmontagem e o transporte entram no escopo da obra?",
+    "impacto": "Serviço de desmontagem e transporte pode não estar orçado.",
+    "campos": [
+      {
+        "chave": "disponibilidade",
+        "rotulo": "Disponibilidade / estado"
+      },
+      {
+        "chave": "escopo",
+        "rotulo": "Desmontagem no escopo?"
+      }
+    ],
+    "marcadores": [
+      {
+        "prancha": 3,
+        "x": 1218,
+        "y": 1116,
+        "w": 185,
+        "h": 28
+      },
+      {
+        "prancha": 3,
+        "x": 1095,
+        "y": 1160,
+        "w": 60,
+        "h": 50
+      }
+    ],
+    "ambientes": [
+      "Diversos"
+    ],
+    "disciplinas": [
+      "iluminacao"
+    ],
+    "relacionadas": [],
+    "identificadaEm": "2026-11-15",
+    "origem": "Análise Claude Code das pranchas do PDF 2026_Escritório Loft_EP_Estudo Preliminar_R00.pdf",
+    "impactoFinanceiro": {
+      "tipo": "nao_quantificado",
+      "servico": "Desmontagem, transporte e reinstalação de pendentes",
+      "unidade": "un",
+      "quantidade": 7,
+      "origemQuantidade": "Prancha p.3 – legenda: item 12 (5 un.) + item 20 (2 un.)",
+      "custoUnitario": null,
+      "valorEstimado": null,
+      "incerteza": "alta",
+      "justificativa": "Sem especificação nem preço no projeto; quantitativo não levantado."
+    }
+  }
+]
