@@ -32,7 +32,7 @@ export function montar(alvo, { navegar }) {
       kpi(ind.pendentes, 'Pendentes de terceiros', null, { status: 'pendente' }, ind.pendentes ? 'amarelo' : undefined),
       kpi(ind.emValidacao, 'Em validação', null, { status: 'em_validacao' }, ind.emValidacao ? 'amarelo' : undefined),
       kpi(ind.respondidas, 'Respondidas', 'não validadas', { status: 'respondida' }),
-      kpi(ind.validadas, 'Validadas', 'com evidência', { status: 'validada' }, ind.validadas ? 'verde' : undefined),
+      kpi(ind.validadas, 'Validadas', 'com nota de validação', { status: 'validada' }, ind.validadas ? 'verde' : undefined),
       kpi(ind.altaPrioridadeAbertas, 'Alta prioridade', 'ainda não resolvidas', { prioridade: 'alta' }, ind.altaPrioridadeAbertas ? 'vermelho' : undefined),
       kpi(ind.conflitos, 'Conflitos entre pranchas', 'inconsistências ou multi-prancha', { categoria: 'inconsistencia' })
     ]);
@@ -40,7 +40,7 @@ export function montar(alvo, { navegar }) {
     const resolucao = cartao('Maturidade do projeto', [
       el('div', { className: 'hero-resolucao' }, [
         el('div', { className: 'numero' }, [`${ind.percentualResolucao}`, el('small', { textContent: '% resolvido' })]),
-        el('p', { textContent: `${plural(ind.validadas, 'validada', 'validadas')} e ${plural(ind.naoAplicaveis, 'não aplicável', 'não aplicáveis')}, de ${ind.total}. ${ind.percentualRespondidas}% já têm alguma resposta. Só contam como resolvidas as lacunas validadas com evidência ou arquivadas com justificativa.` })
+        el('p', { textContent: `${plural(ind.validadas, 'validada', 'validadas')} e ${plural(ind.naoAplicaveis, 'não aplicável', 'não aplicáveis')}, de ${ind.total}. ${ind.percentualRespondidas}% já têm alguma resposta. Só contam como resolvidas as lacunas validadas (com nota de validação) ou arquivadas com justificativa.` })
       ]),
       barraStatus(ind.porStatus, ind.total)
     ], { classe: 'c-7' });

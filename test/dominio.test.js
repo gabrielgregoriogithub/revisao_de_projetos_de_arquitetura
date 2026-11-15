@@ -19,7 +19,7 @@ const lac = (id, extra = {}, resposta = {}) => ({
 test('workflow: validada só sai para reaberta; em validação não volta para respondida', () => {
   assert.equal(transicaoPermitida('aberta', 'respondida'), true);
   assert.equal(transicaoPermitida('aberta', 'validada'), false);
-  assert.equal(transicaoPermitida('respondida', 'validada'), false);
+  assert.equal(transicaoPermitida('respondida', 'validada'), true, 'validação direta, só com a nota');
   assert.equal(transicaoPermitida('em_validacao', 'validada'), true);
   assert.equal(transicaoPermitida('em_validacao', 'respondida'), false);
   assert.deepEqual(proximosStatus('validada'), ['reaberta']);

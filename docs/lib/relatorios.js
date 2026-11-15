@@ -158,7 +158,7 @@ export function gerarRelatorio(tipo, { projeto, lacunas, eventos }, { recortes =
 <dl class="ficha"><dt>Etapa</dt><dd>${esc(projeto.etapa)}</dd><dt>Arquivo</dt><dd>${esc(projeto.arquivo)}</dd>
 <dt>Projeto</dt><dd>${esc(projeto.autorProjeto ?? '—')}</dd><dt>Endereço</dt><dd>${esc(projeto.endereco ?? '—')}</dd>
 <dt>Pranchas</dt><dd>${esc(projeto.pranchas.map((p) => `Folha ${p.folha} (${p.titulo})`).join('; '))}</dd><dt>Emissão</dt><dd>${esc(emissao)}</dd></dl></header>
-<p class="ressalva">Lacunas identificadas por análise assistida por IA (Claude Code) sobre as pranchas listadas. São pontos a esclarecer, não conclusões técnicas. Somente itens com status "Validada" foram confirmados com evidência.</p>
+<p class="ressalva">Lacunas identificadas por análise assistida por IA (Claude Code) sobre as pranchas listadas. São pontos a esclarecer, não conclusões técnicas. Somente itens com status "Validada" foram confirmados tecnicamente (com nota de validação).</p>
 ${corpos[tipo]()}
 <footer>Lacunas.obra · ${esc(projeto.nome)} · emitido em ${esc(emissao)}</footer>
 </main><script src="${esc(base)}static/relatorio.js"></script></body></html>`;

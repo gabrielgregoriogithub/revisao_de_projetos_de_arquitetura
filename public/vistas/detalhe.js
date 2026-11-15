@@ -14,7 +14,7 @@ const ACAO = {
   respondida: { rotulo: ESTATICO ? 'Registrar resposta' : 'Devolver para o Claude', classe: 'pri', ic: 'check' },
   pendente: { rotulo: 'Marcar pendente' },
   em_validacao: { rotulo: 'Enviar para validação', classe: 'pri' },
-  validada: { rotulo: 'Validar tecnicamente', classe: 'pri', ic: 'check', confirmar: 'Confirma que a especificação foi conferida com evidência? Ela passará a ser tratada como informação técnica confirmada.' },
+  validada: { rotulo: 'Validar tecnicamente', classe: 'pri', ic: 'check', confirmar: 'Confirma que a especificação foi conferida (conforme a nota de validação)? Ela passará a ser tratada como informação técnica confirmada.' },
   reaberta: { rotulo: 'Reabrir', classe: 'perigo', confirmar: 'Reabrir a lacuna? Se estiver validada, a validação será desfeita (fica registrado no histórico).' },
   aberta: { rotulo: 'Voltar para aberta' },
   nao_aplicavel: { rotulo: 'Não aplicável', classe: 'fantasma', confirmar: 'Arquivar como não aplicável? Explique o motivo na observação.' }
@@ -161,7 +161,7 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
       e.anexo ? el('a', { href: urlAnexo(e.anexo.id), target: '_blank', rel: 'noopener', title: `SHA-256 ${e.anexo.sha256}` },
         [`📎 ${e.anexo.nome} (${Math.max(1, Math.round(e.anexo.tamanho / 1024))} KB)`]) : null]),
     botao('', { classe: 'fantasma peq icone', ic: 'lixo', titulo: 'Remover evidência', onclick: () => { evidencias = evidencias.filter((_, j) => j !== i); desenharEvid(); marcarSujo(); } })
-  ])) : [el('li', { className: 'muted', style: 'grid-template-columns:1fr', textContent: 'Nenhuma evidência anexada. Validar exige ao menos uma.' })]));
+  ])) : [el('li', { className: 'muted', style: 'grid-template-columns:1fr', textContent: 'Nenhuma evidência anexada (opcional).' })]));
   desenharEvid();
   const novoTipo = el('select', { className: 'entrada', 'aria-label': 'Tipo de evidência' }, Object.entries(TIPOS_EVID).map(([v, t]) => el('option', { value: v, textContent: t })));
   const novaDesc = el('input', { className: 'entrada', placeholder: 'Descrição (ex.: e-mail da arquiteta de 16/11)', maxLength: 500 });
@@ -198,7 +198,7 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
   const validacao = ['respondida', 'em_validacao', 'validada'].includes(r.status) ? secao('Validação técnica', [
     campoTexto('Nota de validação', 'notaValidacao', r.notaValidacao, { area: true, dica: 'O que foi conferido, contra qual documento. Obrigatória para validar.', disabled: r.status === 'validada' }),
     r.validadaEm ? el('p', { className: 'muted', style: 'margin:0;font-size:12px', textContent: `Validada em ${dataBr(r.validadaEm)}` }) : null
-  ], { aberta: r.status !== 'respondida' }) : null;
+  ], { aberta: true }) : null;
 
   // ── 5. Impacto financeiro
   const ib = { ...l.impactoFinanceiro, ...(r.impacto ?? {}) };

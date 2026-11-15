@@ -39,7 +39,7 @@ export function encontrarContradicoes(lacunas) {
 
 /**
  * Propõe ações para as lacunas com status "respondida".
- * - completa → em_validacao (nunca "validada": validar exige evidência e um profissional)
+ * - completa → em_validacao (nunca "validada": validar exige a nota de validação de um profissional)
  * - incompleta ou vaga → reaberta, com o motivo
  * Contradições não mudam status sozinhas: viram alerta para o Claude/profissional decidir.
  */

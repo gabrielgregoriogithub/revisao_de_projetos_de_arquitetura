@@ -29,12 +29,12 @@ test('núcleo em memória (caminho do navegador): workflow, histórico e versão
   const s = criarNucleo(arm);
   const v0 = await s.versao();
   assert.equal((await s.salvarResposta('L09', { status: 'respondida', campos: { piso: 'Vinílico' } })).ok, true);
-  assert.equal((await s.salvarResposta('L09', { status: 'validada', campos: { piso: 'Vinílico' } })).codigo, 400, 'sem evidência: recusa na validação');
-  const pulo = await s.salvarResposta('L09', { status: 'validada', campos: { piso: 'Vinílico' }, notaValidacao: 'ok', evidencias: [{ tipo: 'email', descricao: 'e-mail' }] });
-  assert.equal(pulo.codigo, 409, 'respondida → validada sem passar por validação técnica');
+  assert.equal((await s.salvarResposta('L09', { status: 'validada', campos: { piso: 'Vinílico' } })).codigo, 400, 'sem nota de validação: recusa');
+  assert.equal((await s.salvarResposta('L09', { status: 'reaberta', campos: { piso: 'Vinílico' } })).ok, true);
+  assert.equal((await s.salvarResposta('L09', { status: 'validada', campos: { piso: 'Vinílico' }, notaValidacao: 'ok' })).codigo, 409, 'reaberta precisa de nova resposta antes de validar');
   const d = await s.carregar();
-  assert.equal(d.lacunas[0].resposta.status, 'respondida');
-  assert.equal(d.eventos.length, 1);
+  assert.equal(d.lacunas[0].resposta.status, 'reaberta');
+  assert.equal(d.eventos.length, 2);
   assert.notEqual(await s.versao(), v0);
   assert.ok([...arm.m.keys()].includes('esquema.json'), 'migração de esquema também roda no navegador');
 });
@@ -179,4 +179,13 @@ test('servidor: Host externo bloqueado também em leitura; corpo nulo 400; corpo
   } finally {
     srv.close();
   }
+});
+
+test('validação técnica: só a nota é obrigatória; respondida pode ser validada direto; aberta não', async () => {
+  const s = criarNucleo(memoria({ 'projeto.json': projeto, 'lacunas.json': [LACUNA, { ...LACUNA, id: 'L10' }] }));
+  assert.equal((await s.salvarResposta('L09', { status: 'respondida', campos: { piso: 'Vinílico' } })).ok, true);
+  const v = await s.salvarResposta('L09', { status: 'validada', campos: { piso: 'Vinílico' }, notaValidacao: 'Conferido contra a prancha 03 e o e-mail da arquiteta' });
+  assert.equal(v.ok, true, 'sem evidência e sem passar por "Em validação técnica"');
+  assert.deepEqual(v.resposta.evidencias, []);
+  assert.equal((await s.salvarResposta('L10', { status: 'validada', campos: {}, notaValidacao: 'x' })).codigo, 409, 'lacuna aberta, sem resposta, não pode ser validada');
 });

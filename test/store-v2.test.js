@@ -27,17 +27,18 @@ test('migra respostas v1 com backup e adiciona revisão', async () => {
   assert.match(backups[0], /^respostas-/);
 });
 
-test('fluxo completo: responder → validação → validada (com evidência) → reaberta, com histórico', async () => {
+test('fluxo completo: responder → validação → validada (só a nota é obrigatória) → reaberta, com histórico', async () => {
   const dir = await novoDir();
   const s = criarStore(dir);
   assert.equal((await s.salvarResposta('L01', { status: 'respondida', campos: { piso: 'Porcelanato' } }, { autor: 'Ana' })).ok, true);
   assert.equal((await s.salvarResposta('L01', { status: 'em_validacao', campos: { piso: 'Porcelanato' } })).ok, true);
 
-  const semEvidencia = await s.salvarResposta('L01', { status: 'validada', campos: { piso: 'Porcelanato' }, notaValidacao: 'ok' });
-  assert.equal(semEvidencia.ok, false);
-  assert.match(semEvidencia.erro, /evidência/);
+  const semNota = await s.salvarResposta('L01', { status: 'validada', campos: { piso: 'Porcelanato' }, evidencias: EVID });
+  assert.equal(semNota.ok, false);
+  assert.match(semNota.erro, /nota de validação/);
 
-  const v = await s.salvarResposta('L01', { status: 'validada', campos: { piso: 'Porcelanato' }, notaValidacao: 'Conferido', evidencias: EVID });
+  // Evidência é opcional: só a nota basta.
+  const v = await s.salvarResposta('L01', { status: 'validada', campos: { piso: 'Porcelanato' }, notaValidacao: 'Conferido com a prancha 03' });
   assert.equal(v.ok, true);
   assert.ok(v.resposta.validadaEm);
   const r = await s.salvarResposta('L01', { status: 'reaberta', campos: { piso: 'Porcelanato' }, observacao: 'Mudou' });

@@ -1,6 +1,6 @@
 // Sugestões automáticas por regras fixas (sem IA). Compartilhado com o navegador.
 // Princípio: a sugestão NUNCA vira resposta sozinha — o usuário aplica ao formulário, revisa e salva;
-// e a resposta ainda precisa de validação técnica com evidência. Cada sugestão traz regra, fonte e confiança.
+// e a resposta ainda precisa de validação técnica (nota de validação). Cada sugestão traz regra, fonte e confiança.
 import { chaveAmbiente } from './geometria.js';
 
 export const REGRAS = {
