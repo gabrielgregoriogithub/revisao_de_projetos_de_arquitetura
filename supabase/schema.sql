@@ -82,6 +82,9 @@ begin
 end $$;
 revoke all on function public.gravar_arquivo(text, text, jsonb, bigint) from public;
 grant execute on function public.gravar_arquivo(text, text, jsonb, bigint) to authenticated;
+-- Defesa em profundidade: o Supabase concede EXECUTE a 'anon' por padrão; sem login, nem chamar as funções.
+revoke execute on function public.gravar_arquivo(text, text, jsonb, bigint) from anon;
+revoke execute on function public.meu_papel(text) from anon;
 
 -- ───────────── Políticas (RLS) ─────────────
 drop policy if exists "membros veem o projeto" on public.projetos;

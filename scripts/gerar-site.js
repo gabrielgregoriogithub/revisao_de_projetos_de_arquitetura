@@ -4,6 +4,7 @@
 import { cp, mkdir, readFile, writeFile, readdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { RAIZ, DADOS } from './comum.js';
+import { validarConfigNuvem } from '../lib/config-nuvem.js';
 
 const SAIDA = path.join(RAIZ, 'docs');
 const LIB = ['nucleo-store.js', 'eap.js', 'eap-hierarquica.js', 'relatorios.js', 'armazenamento-nuvem.js'];
@@ -58,10 +59,8 @@ await writeFile(path.join(SAIDA, '.nojekyll'), '');
 // Banco compartilhado (Supabase): URL e chave anon são públicas por design — a proteção é o RLS do schema.sql.
 const configNuvem = await readFile(path.join(RAIZ, 'nuvem.config.json'), 'utf8').catch(() => null);
 if (configNuvem) {
-  const c = JSON.parse(configNuvem);
-  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(c.url ?? '') || !String(c.chaveAnon ?? '').startsWith('eyJ')) throw new Error('nuvem.config.json inválido: use a Project URL (https://xxxx.supabase.co) e a chave "anon public".');
-  if (JSON.parse(Buffer.from(c.chaveAnon.split('.')[1], 'base64url').toString()).role !== 'anon') throw new Error('nuvem.config.json: a chave NÃO é a "anon public". Nunca publique a service_role.');
-  await writeFile(path.join(SAIDA, 'nuvem.config.json'), JSON.stringify({ url: c.url, chaveAnon: c.chaveAnon }, null, 2));
+  const c = validarConfigNuvem(JSON.parse(configNuvem)); // recusa chaves secretas
+  await writeFile(path.join(SAIDA, 'nuvem.config.json'), JSON.stringify(c, null, 2));
 }
 process.stdout.write(`Banco na nuvem: ${configNuvem ? 'configurado' : 'não configurado (sem nuvem.config.json)'}.
 `);

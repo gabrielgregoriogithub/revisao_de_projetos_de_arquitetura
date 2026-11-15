@@ -36,10 +36,10 @@ Tempo estimado: 15 minutos. Não é preciso cartão de crédito.
 1. Abra **Project Settings › API** (ou **Data API**).
 2. Copie:
    - **Project URL**, algo como `https://abcdefghijk.supabase.co`;
-   - a chave **`anon` `public`**, um texto longo que começa com `eyJ`.
+   - a chave **Publishable**, que começa com `sb_publishable_`. Em projetos antigos ela se chama `anon public` e começa com `eyJ`.
 3. Cole as duas aqui na conversa. Eu crio o `nuvem.config.json`, gero o site e publico.
 
-> ⚠️ **Nunca** envie nem publique a chave **`service_role`** (ou "secret"). Ela ignora todas as regras de segurança. A chave `anon` é pública por design: quem protege os dados são as regras do `schema.sql`. O gerador do site recusa automaticamente uma chave que não seja `anon`.
+> ⚠️ **Nunca** envie nem publique a chave **Secret** (`sb_secret_…`) ou a antiga **`service_role`**. Ela ignora todas as regras de segurança. A chave `anon` é pública por design: quem protege os dados são as regras do `schema.sql`. O gerador do site recusa automaticamente uma chave que não seja `anon`.
 
 ## Parte 5: usar e compartilhar (depois que eu publicar)
 
@@ -71,3 +71,11 @@ Se a equipe crescer, configure um SMTP próprio em **Authentication › Emails �
 
 - Do jeito que está configurado, qualquer pessoa pode criar uma conta, mas **só vê os projetos para os quais foi convidada**.
 - Para fechar de vez: **Authentication › Sign In / Providers › desative "Allow new users to sign up"**. A partir daí, novos membros precisam ser convidados também pelo painel: **Authentication › Users › Invite user**.
+
+## Se a chave secreta vazar
+
+Em **Project Settings › API Keys › Secret keys**, revogue a chave vazada (menu ⋯ › *Delete*) e, se precisar, crie outra. O site nunca usa a chave secreta.
+
+## Aplicar atualizações do schema.sql
+
+O `supabase/schema.sql` pode ser rodado de novo a qualquer momento (SQL Editor › colar › Run). Ele não apaga dados, só recria funções e regras.

@@ -98,3 +98,15 @@ test('nuvem: backup com nome válido no banco e anexo verificado no armazenament
   assert.equal(await a.anexoExiste('abc.pdf'), true);
   assert.equal(await a.anexoExiste('zzz.pdf'), false);
 });
+
+test('configuração da nuvem: aceita só chaves públicas e recusa as secretas', async () => {
+  const { validarConfigNuvem } = await import('../lib/config-nuvem.js');
+  const jwt = (role) => `eyJhbGciOiJIUzI1NiJ9.${Buffer.from(JSON.stringify({ role })).toString('base64url')}.assinatura`;
+  assert.deepEqual(validarConfigNuvem({ url: 'https://abcd.supabase.co/rest/v1/', chaveAnon: 'sb_publishable_AbC123xyz_456' }),
+    { url: 'https://abcd.supabase.co', chaveAnon: 'sb_publishable_AbC123xyz_456' }, 'normaliza a URL vinda do /rest/v1/');
+  assert.equal(validarConfigNuvem({ url: 'https://abcd.supabase.co', chaveAnon: jwt('anon') }).url, 'https://abcd.supabase.co');
+  assert.throws(() => validarConfigNuvem({ url: 'https://abcd.supabase.co', chaveAnon: 'sb_secret_qualquercoisa123' }), /SECRETA/);
+  assert.throws(() => validarConfigNuvem({ url: 'https://abcd.supabase.co', chaveAnon: jwt('service_role') }), /service_role/);
+  assert.throws(() => validarConfigNuvem({ url: 'https://evil.example.com', chaveAnon: 'sb_publishable_AbC123xyz_456' }), /Project URL/);
+  assert.throws(() => validarConfigNuvem({ url: 'https://abcd.supabase.co', chaveAnon: 'qualquer' }), /Publishable/);
+});
