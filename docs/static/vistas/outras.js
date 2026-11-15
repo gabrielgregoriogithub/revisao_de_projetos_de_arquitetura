@@ -4,7 +4,8 @@ import { icone } from '../icones.js';
 import { estado } from '../estado.js';
 import { botao, etiqueta, avisar } from '../componentes.js';
 import { aplicarTema } from '../tema.js';
-import { api, abrirRelatorio, urlPrancha, ESTATICO } from '../api.js';
+import { api, abrirRelatorio, urlPrancha, ESTATICO, nuvem } from '../api.js';
+import { painelNuvem } from './nuvem-painel.js';
 
 const RELATORIOS = [
   ['executivo', 'Relatório executivo', 'Indicadores, alertas, prioridades e riscos — para apresentar ao cliente ou à incorporadora.'],
@@ -103,6 +104,7 @@ export function projeto(alvo, { navegar }) {
           icone('proximo')
         ])))
       ])]),
+      nuvem ? painelNuvem() : null,
       listaProjetos
     ])
   ]));

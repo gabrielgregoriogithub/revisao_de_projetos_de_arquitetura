@@ -5,12 +5,17 @@ import { processarRespostas } from '../../lib/dominio/processamento.js';
 import { compararRevisoes } from '../../lib/dominio/revisoes.js';
 import { kv, adaptadorNavegador } from './armazenamento.js';
 import { lerPdf } from './pdf-navegador.js';
+import * as nuvem from './nuvem.js';
 
 const BASE = new URL('./', document.baseURI);
 const nucleos = new Map();
 const urls = new Map();       // "<projeto>/<arquivo>" → URL da imagem
 const urlsAnexo = new Map();  // id do anexo → URL
 let demos = null;
+await nuvem.iniciarNuvem(BASE);
+// Link compartilhado (?projeto=<id>): abre direto o projeto (depois do login, se for da nuvem).
+const projetoDoLink = new URLSearchParams(location.search).get('projeto');
+if (projetoDoLink) await kv.gravar('ativo', projetoDoLink).catch(() => {});
 
 const erro = (codigo, mensagem) => Object.assign(new Error(mensagem), { codigo });
 const slug = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50);
@@ -19,9 +24,15 @@ async function indiceDemos() {
   demos ??= fetch(new URL('dados/projetos/indice.json', BASE)).then((r) => (r.ok ? r.json() : [])).catch(() => []);
   return demos;
 }
+let cacheNuvem = { em: 0, lista: [] };
+const esquecerNuvem = () => { cacheNuvem = { em: 0, lista: [] }; };
 async function listar() {
-  return [...(await indiceDemos()).map((p) => ({ ...p, demo: true })), ...((await kv.ler('indice-local')) ?? [])];
+  // Lista da nuvem em cache por 30 s (a verificação automática roda a cada 5 s).
+  if (Date.now() - cacheNuvem.em > 30000) cacheNuvem = { em: Date.now(), lista: await nuvem.listarProjetos().catch(() => []) };
+  const daNuvem = cacheNuvem.lista;
+  return [...daNuvem, ...(await indiceDemos()).map((p) => ({ ...p, demo: true })), ...((await kv.ler('indice-local')) ?? [])];
 }
+const ehNuvem = async (id) => (await listar()).some((p) => p.id === id && p.nuvem);
 async function ativo() {
   const lista = await listar();
   if (!lista.length) throw erro(404, 'Nenhum projeto. Importe um PDF em Projeto › Base de pranchas.');
@@ -29,6 +40,7 @@ async function ativo() {
   return lista.some((p) => p.id === salvo) ? salvo : lista[0].id;
 }
 async function nucleo(id) {
+  if (!nucleos.has(id) && (await ehNuvem(id))) nucleos.set(id, criarNucleo(nuvem.adaptador(id)));
   if (!nucleos.has(id)) {
     const demo = (await indiceDemos()).some((p) => p.id === id);
     if (!demo && !((await kv.ler('indice-local')) ?? []).some((p) => p.id === id)) throw erro(404, `Projeto ${id} não encontrado.`);
@@ -39,6 +51,14 @@ async function nucleo(id) {
 
 /** Prepara as URLs das pranchas (arquivo publicado ou blob local) e dos anexos de um projeto. */
 async function prepararUrls(id, projeto) {
+  if (await ehNuvem(id)) {
+    const arquivos = projeto.pranchas.flatMap((p) => [p.imagem, p.miniatura].filter(Boolean));
+    const assinadas = await nuvem.urlsAssinadas([...new Set(arquivos)].map((a) => `${id}/pranchas/${a}`));
+    for (const a of arquivos) urls.set(`${id}/${a}`, assinadas[`${id}/pranchas/${a}`] ?? '');
+    const anexos = await nuvem.urlsAssinadas(await nuvem.listarAnexos(id));
+    for (const [caminho, url] of Object.entries(anexos)) urlsAnexo.set(caminho.split('/').pop(), url);
+    return;
+  }
   const demo = (await indiceDemos()).some((p) => p.id === id);
   for (const p of projeto.pranchas) {
     for (const arq of [p.imagem, p.miniatura].filter(Boolean)) {
@@ -130,8 +150,14 @@ export async function enviarAnexo(arquivo) {
   const aid = `${crypto.randomUUID()}.${tipo}`;
   const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', buf))].map((b) => b.toString(16).padStart(2, '0')).join('');
   const blob = new Blob([buf], { type: { pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', webp: 'image/webp', txt: 'text/plain' }[tipo] });
-  await kv.gravar(`b:${id}:anexos/${aid}`, blob);
-  urlsAnexo.set(aid, URL.createObjectURL(blob));
+  if (await ehNuvem(id)) {
+    await nuvem.enviarArquivo(`${id}/anexos/${aid}`, blob);
+    const assinada = await nuvem.urlsAssinadas([`${id}/anexos/${aid}`]);
+    urlsAnexo.set(aid, assinada[`${id}/anexos/${aid}`] ?? '#');
+  } else {
+    await kv.gravar(`b:${id}:anexos/${aid}`, blob);
+    urlsAnexo.set(aid, URL.createObjectURL(blob));
+  }
   return { id: aid, nome: arquivo.name.split(/[\\/]/).pop().slice(0, 120), tipo, tamanho: buf.length, sha256: hash, enviadoEm: new Date().toISOString() };
 }
 
@@ -160,4 +186,55 @@ export async function importarPdf(arquivo, { nome, revisao, escala }, progresso)
   await arm.gravar('texto-pdf.json', { geradoEm: new Date().toISOString(), arquivo: arquivo.name, pranchas: texto });
   await kv.gravar('indice-local', [...((await kv.ler('indice-local')) ?? []), { id, nome, etapa: projeto.etapa, revisao: projeto.revisao, obraId: projeto.obraId, analisadoEm: null }]);
   return { id, pranchas: pranchas.length };
+}
+
+// ───────────── Nuvem: estado, login, envio de projeto e membros ─────────────
+const ARQUIVOS_PROJETO = ['projeto.json', 'lacunas.json', 'esquema.json', 'texto-pdf.json', 'respostas.json', 'historico.json', 'ambientes.json', 'anotacoes.json'];
+
+export async function estadoNuvem() {
+  const u = await nuvem.usuario().catch(() => null);
+  const id = await ativo().catch(() => null);
+  return { configurada: nuvem.configurada(), email: u?.email ?? null, projetoAtivoNaNuvem: id ? await ehNuvem(id) : false, projetoAtivo: id };
+}
+export const entrarNuvem = (email) => nuvem.entrar(email);
+export const sairNuvem = async () => { await nuvem.sair(); nucleos.clear(); esquecerNuvem(); };
+export const membrosNuvem = (id) => nuvem.membros(id);
+export const adicionarMembroNuvem = (id, email, papel) => nuvem.adicionarMembro(id, email, papel);
+export const removerMembroNuvem = (id, email) => nuvem.removerMembro(id, email);
+
+/**
+ * Copia um projeto deste navegador (demonstração ou importado) para a nuvem: arquivos JSON, pranchas e anexos.
+ * O original continua no navegador; o projeto ativo passa a ser o da nuvem.
+ */
+export async function enviarParaNuvem(origemId, progresso = () => {}) {
+  if (!(await nuvem.usuario())) throw new Error('Entre com seu e-mail antes de enviar para a nuvem.');
+  if (await ehNuvem(origemId)) throw new Error('Este projeto já está na nuvem.');
+  const demo = (await indiceDemos()).some((p) => p.id === origemId);
+  const origem = adaptadorNavegador(origemId, demo ? new URL(`dados/projetos/${origemId}/`, BASE).href : null);
+  const projeto = await origem.ler('projeto.json');
+  const novoId = `${slug(projeto.nome) || 'projeto'}${projeto.revisao ? `-${projeto.revisao.toLowerCase()}` : ''}-${crypto.randomUUID().slice(0, 4)}`.slice(0, 63);
+  progresso('Criando o projeto na nuvem…');
+  await nuvem.criarProjeto({ id: novoId, nome: projeto.nome, revisao: projeto.revisao, obraId: projeto.obraId });
+  const destino = nuvem.adaptador(novoId);
+  for (const nome of ARQUIVOS_PROJETO) {
+    const dados = await origem.ler(nome, null);
+    if (dados === null) continue;
+    progresso(`Enviando ${nome}…`);
+    await destino.ler(nome, null);
+    await destino.gravar(nome, dados);
+  }
+  await prepararUrls(origemId, projeto);
+  const arquivos = [...new Set(projeto.pranchas.flatMap((p) => [p.imagem, p.miniatura].filter(Boolean)))];
+  for (const [i, arq] of arquivos.entries()) {
+    progresso(`Enviando pranchas (${i + 1}/${arquivos.length})…`);
+    const blob = await fetch(urlPrancha(arq, origemId)).then((r) => { if (!r.ok) throw new Error(`Falha ao ler a prancha ${arq}.`); return r.blob(); });
+    await nuvem.enviarArquivo(`${novoId}/pranchas/${arq}`, blob);
+  }
+  for (const chave of await kv.chaves(`b:${origemId}:anexos/`)) {
+    progresso('Enviando anexos…');
+    await nuvem.enviarArquivo(`${novoId}/anexos/${chave.split('/').pop()}`, await kv.ler(chave));
+  }
+  esquecerNuvem();
+  await kv.gravar('ativo', novoId);
+  return { id: novoId };
 }

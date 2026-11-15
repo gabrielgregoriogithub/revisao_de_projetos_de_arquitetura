@@ -6,7 +6,7 @@ import path from 'node:path';
 import { RAIZ, DADOS } from './comum.js';
 
 const SAIDA = path.join(RAIZ, 'docs');
-const LIB = ['nucleo-store.js', 'eap.js', 'eap-hierarquica.js', 'relatorios.js'];
+const LIB = ['nucleo-store.js', 'eap.js', 'eap-hierarquica.js', 'relatorios.js', 'armazenamento-nuvem.js'];
 const DADOS_PUBLICOS = ['projeto.json', 'lacunas.json', 'texto-pdf.json', 'esquema.json'];
 
 await rm(SAIDA, { recursive: true, force: true });
@@ -39,8 +39,8 @@ const html = (await readFile(path.join(RAIZ, 'public', 'index.html'), 'utf8'))
   <script>window.LACUNAS_ESTATICO = true;</script>
   <script type="module" src="./static/app.js"></script>`)
   .replace('<div class="app" id="app">', `<div class="aviso-publicado" id="aviso-publicado" role="note">
-    <span><b>Versão publicada (demonstração).</b> Tudo roda no seu navegador: respostas, medições e PDFs importados ficam só aqui.
-    Upload de anexos no servidor, XLSX e a análise automática pelo Claude Code exigem a versão local (<code>npm start</code>).</span>
+    <span><b>Versão publicada.</b> Sem login, o que você faz fica só neste navegador. Para salvar e compartilhar com a equipe,
+    entre em <b>Projeto › Banco na nuvem</b>. XLSX e a análise automática pelo Claude Code exigem a versão local (<code>npm start</code>).</span>
     <button type="button" id="fechar-aviso" aria-label="Fechar aviso">×</button>
   </div>
   <div class="app" id="app">`);
@@ -55,4 +55,14 @@ document.getElementById('fechar-aviso')?.addEventListener('click', () => {
 `);
 await writeFile(path.join(SAIDA, 'index.html'), html.replace('<script type="module" src="./static/app.js"></script>', '<script type="module" src="./static/app.js"></script>\n  <script src="./static/aviso.js" defer></script>'));
 await writeFile(path.join(SAIDA, '.nojekyll'), '');
+// Banco compartilhado (Supabase): URL e chave anon são públicas por design — a proteção é o RLS do schema.sql.
+const configNuvem = await readFile(path.join(RAIZ, 'nuvem.config.json'), 'utf8').catch(() => null);
+if (configNuvem) {
+  const c = JSON.parse(configNuvem);
+  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(c.url ?? '') || !String(c.chaveAnon ?? '').startsWith('eyJ')) throw new Error('nuvem.config.json inválido: use a Project URL (https://xxxx.supabase.co) e a chave "anon public".');
+  if (JSON.parse(Buffer.from(c.chaveAnon.split('.')[1], 'base64url').toString()).role !== 'anon') throw new Error('nuvem.config.json: a chave NÃO é a "anon public". Nunca publique a service_role.');
+  await writeFile(path.join(SAIDA, 'nuvem.config.json'), JSON.stringify({ url: c.url, chaveAnon: c.chaveAnon }, null, 2));
+}
+process.stdout.write(`Banco na nuvem: ${configNuvem ? 'configurado' : 'não configurado (sem nuvem.config.json)'}.
+`);
 process.stdout.write(`Site gerado em docs/ com ${indice.length} projeto(s): ${indice.map((p) => p.id).join(', ')}.\n`);

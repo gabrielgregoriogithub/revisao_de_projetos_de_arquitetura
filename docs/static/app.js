@@ -146,7 +146,7 @@ async function iniciar() {
   api.projetos().then(({ ativo, projetos }) => {
     if (projetos.length < 2) return;
     const sel = el('select', { className: 'entrada', 'aria-label': 'Projeto / revisão', style: 'width:auto;min-height:30px;padding:3px 8px;font-size:12px' },
-      projetos.map((p) => el('option', { value: p.id, selected: p.id === ativo, textContent: `${p.nome} · ${p.revisao ?? p.etapa}` })));
+      projetos.map((p) => el('option', { value: p.id, selected: p.id === ativo, textContent: `${p.nuvem ? '☁ ' : ''}${p.nome} · ${p.revisao ?? p.etapa}` })));
     sel.onchange = async () => {
       if (vistaAtual?.podeSair && !(await vistaAtual.podeSair())) { sel.value = ativo; return; }
       try { await api.definirProjeto(sel.value); location.hash = '#/visao-geral'; location.reload(); } catch (erro) { avisar(erro.message, { erro: true }); sel.value = ativo; }

@@ -13,6 +13,13 @@ export function urlPrancha(arquivo, projetoId = null) {
   const id = projetoId ?? projetoAtual;
   return id ? `/p/${encodeURIComponent(id)}/pranchas/${encodeURIComponent(arquivo)}` : `/pranchas/${encodeURIComponent(arquivo)}`;
 }
+/** Funções da nuvem (só na versão publicada; null na versão local, que grava no disco). */
+export const nuvem = local ? {
+  estado: () => local.estadoNuvem(), entrar: (e) => local.entrarNuvem(e), sair: () => local.sairNuvem(),
+  enviarProjeto: (id, progresso) => local.enviarParaNuvem(id, progresso),
+  membros: (id) => local.membrosNuvem(id), adicionarMembro: (id, e, p) => local.adicionarMembroNuvem(id, e, p), removerMembro: (id, e) => local.removerMembroNuvem(id, e)
+} : null;
+
 export const urlAnexo = (id) => (local ? local.urlAnexo(id) : `/anexos/${encodeURIComponent(id)}`);
 
 function baixarBlob(conteudo, nome, tipo) {

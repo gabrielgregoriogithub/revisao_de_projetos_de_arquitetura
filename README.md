@@ -15,12 +15,23 @@ A interpretação das pranchas é feita pelo **Claude Code**. O app é a interfa
 
 Para publicar, ative em Settings › Pages: branch `main`, pasta `/docs` (ou `/`, que redireciona para `docs/`).
 
+## Banco compartilhado na nuvem (Supabase, gratuito)
+
+Na versão publicada, o projeto pode ficar num banco compartilhado. Assim, respostas, validações, observações, medições, anotações, anexos e revisões ficam salvos, e **todos os membros convidados veem a mesma versão**.
+
+- **Como ativar:** veja o **[GUIA-SUPABASE.md](GUIA-SUPABASE.md)**. Em resumo: criar o projeto gratuito, rodar o `supabase/schema.sql` e preencher o `nuvem.config.json` com a Project URL e a chave `anon` (pública por design).
+- **Segurança:** Row Level Security em todas as tabelas e no armazenamento. Só membros leem; dono e editor gravam; só o dono gerencia o acesso. O login é por link no e-mail (sem senha), e o gerador do site recusa uma chave que não seja `anon`.
+- **Arquitetura:** o mesmo núcleo (`lib/nucleo-store.js`) roda sobre um terceiro adaptador, `lib/armazenamento-nuvem.js`. As regras de negócio continuam idênticas às da versão local.
+- **Concorrência:** cada arquivo tem versão, e a gravação usa compare-and-swap (`gravar_arquivo`). Se duas pessoas salvarem ao mesmo tempo, a segunda recebe um aviso para conferir e refazer, e nada é sobrescrito. As alterações de outras pessoas aparecem em até 5 s.
+- **Fluxo de uso:** Projeto › Banco na nuvem › entrar com o e-mail › **Enviar este projeto para a nuvem** › convidar pessoas › copiar o link de compartilhamento.
+- **Sem `nuvem.config.json`:** o site continua funcionando como antes, salvando só no navegador.
+
 ## Rodar
 
 ```bash
 cd lacunas-app
 npm start                  # http://localhost:8766
-npm test                   # 89 testes (node:test), sem dependências
+npm test                   # 93 testes (node:test), sem dependências
 npm run validar            # integridade de projeto.json + lacunas.json
 npm run processar          # prévia do processamento de respostas (não altera nada)
 npm run processar:aplicar  # aplica (com backup) — usado pelo Claude Code
@@ -198,5 +209,5 @@ test/                   56 testes: unidade, integração HTTP, exportações, se
 
 ## Testes
 
-- `npm test`: 89 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
+- `npm test`: 93 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
 - Testado no Chrome, pelo DOM: as 8 telas sem erros; prancha em 5617 px com 27 marcadores na p.2; foco centraliza o marcador no meio da viewport; o marcador mantém a posição relativa exata após zoom e arraste; 100% e ajustar funcionam; fluxo respondida → em validação → validada (só a nota é obrigatória); histórico com 3 eventos; conflito de revisão (409); busca preservando o foco; lote com confirmação; atalho J; relatórios com recortes; sincronização externa detectada em menos de 6 s.
