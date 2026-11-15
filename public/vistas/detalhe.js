@@ -34,6 +34,27 @@ const campoTexto = (rotulo, nome, valor, { area = false, dica, tipo = 'text', ..
   rotulo, dica ? el('small', { textContent: dica }) : null,
   el(area ? 'textarea' : 'input', { className: 'entrada', name: nome, value: valor ?? '', type: area ? undefined : tipo, maxLength: 2000, autocomplete: 'off', ...attrs })
 ]);
+/**
+ * Botões seletores (rádios nativos estilizados): acessíveis por teclado; clicar de novo na opção marcada desmarca.
+ * O valor é lido por form.elements[nome].value (RadioNodeList), como os demais campos.
+ */
+function seletor(campo, valorAtual, desativado) {
+  const nome = `campo:${campo.chave}`;
+  let marcado = valorAtual ?? '';
+  const opcoes = campo.opcoes.map((o) => {
+    const radio = el('input', { type: 'radio', name: nome, value: o, checked: o === marcado, disabled: desativado });
+    radio.addEventListener('click', () => {
+      if (marcado === o) { radio.checked = false; marcado = ''; } else { marcado = o; }
+      radio.dispatchEvent(new Event('input', { bubbles: true })); // marca "alterações não salvas"
+    });
+    return el('label', { className: 'opcao-seletor' }, [radio, el('span', { textContent: o })]);
+  });
+  return el('fieldset', { className: 'campo seletor', disabled: desativado }, [
+    el('legend', { textContent: campo.rotulo }),
+    el('div', { className: 'segmentado', role: 'radiogroup', 'aria-label': campo.rotulo }, opcoes)
+  ]);
+}
+
 const dataBr = (iso) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
 function linhaTempo(eventos) {
@@ -142,10 +163,7 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
   // ── 2. Resposta
   const resposta = secao('Resposta', [
     ...l.campos.map((c) => (Array.isArray(c.opcoes)
-      ? el('label', { className: 'campo' }, [c.rotulo, el('select', { className: 'entrada', name: `campo:${c.chave}`, disabled: !editavel }, [
-        el('option', { value: '', textContent: '— selecione —' }),
-        ...c.opcoes.map((o) => el('option', { value: o, textContent: o, selected: r.campos?.[c.chave] === o }))
-      ])])
+      ? seletor(c, r.campos?.[c.chave], !editavel)
       : campoTexto(c.rotulo, `campo:${c.chave}`, r.campos?.[c.chave], { disabled: !editavel }))),
     campoTexto('Observação', 'observacao', r.observacao, { area: true, disabled: !editavel && !['em_validacao', 'validada', 'nao_aplicavel'].includes(r.status) }),
     campoTexto('Responsável pela informação', 'responsavel', r.responsavel || '', { dica: 'Quem respondeu: arquiteta, condomínio, fornecedor…', disabled: !editavel, maxLength: 120 }),

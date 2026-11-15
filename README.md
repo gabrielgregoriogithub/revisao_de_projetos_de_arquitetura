@@ -20,7 +20,7 @@ Para publicar, ative em Settings › Pages: branch `main`, pasta `/docs` (ou `/`
 ```bash
 cd lacunas-app
 npm start                  # http://localhost:8766
-npm test                   # 87 testes (node:test), sem dependências
+npm test                   # 89 testes (node:test), sem dependências
 npm run validar            # integridade de projeto.json + lacunas.json
 npm run processar          # prévia do processamento de respostas (não altera nada)
 npm run processar:aplicar  # aplica (com backup) — usado pelo Claude Code
@@ -86,6 +86,7 @@ aberta ──► pendente (de terceiros) ──► respondida ──► (em vali
    └──► não aplicável (exige motivo)       └──► reaberta ◄────┴───────────────────┘
 ```
 
+- **Existente mantido / novo**: toda lacuna tem esse campo, exibido como botões seletores (clicar de novo desmarca). Ele é opcional para a checagem de completude, e o servidor só aceita as duas opções.
 - **Respondida ≠ validada.** Só a **validada** é informação técnica confirmada. A **única exigência** para validar é a **nota de validação** (o que foi conferido e contra qual documento). Evidências são opcionais, e a etapa "Em validação técnica" também: uma lacuna respondida pode ser validada direto. Uma lacuna sem resposta (aberta ou reaberta) não pode ser validada.
 - Respostas validadas ou em validação ficam travadas. Para editar, é preciso reabrir a lacuna (o que fica registrado).
 - O servidor recusa transições inválidas (por exemplo, aberta → validada) com 409.
@@ -197,5 +198,5 @@ test/                   56 testes: unidade, integração HTTP, exportações, se
 
 ## Testes
 
-- `npm test`: 87 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
+- `npm test`: 89 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
 - Testado no Chrome, pelo DOM: as 8 telas sem erros; prancha em 5617 px com 27 marcadores na p.2; foco centraliza o marcador no meio da viewport; o marcador mantém a posição relativa exata após zoom e arraste; 100% e ajustar funcionam; fluxo respondida → em validação → validada (só a nota é obrigatória); histórico com 3 eventos; conflito de revisão (409); busca preservando o foco; lote com confirmação; atalho J; relatórios com recortes; sincronização externa detectada em menos de 6 s.

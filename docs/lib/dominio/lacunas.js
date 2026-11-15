@@ -32,6 +32,15 @@ const DISCIPLINA_POR_CATEGORIA = {
   documentacao: ['arquitetura']
 };
 
+/** Campo universal: toda lacuna tem a escolha "Existente mantido / novo" (opcional para a completude). */
+export const CAMPO_SITUACAO = Object.freeze({ chave: 'situacao', rotulo: 'Existente mantido / novo', opcoes: Object.freeze(['Existente mantido', 'Novo']), opcional: true });
+
+/** Campos de resposta de uma lacuna, sempre com o campo de situação (padronizado e sem duplicar). */
+export function camposDaLacuna(lacuna) {
+  const outros = (lacuna?.campos ?? []).filter((c) => c.chave !== CAMPO_SITUACAO.chave);
+  return [...outros, { ...CAMPO_SITUACAO, opcoes: [...CAMPO_SITUACAO.opcoes] }];
+}
+
 export const IMPACTO_VAZIO = Object.freeze({
   tipo: 'nao_quantificado', servico: null, material: null, unidade: null, quantidade: null,
   origemQuantidade: null, custoUnitario: null, valorEstimado: null, incerteza: 'alta', justificativa: null
@@ -47,7 +56,7 @@ export function normalizarLacuna(lacuna, projeto = {}) {
   return {
     ...lacuna,
     marcadores: lacuna.marcadores ?? [],
-    campos: lacuna.campos ?? [],
+    campos: camposDaLacuna(lacuna),
     ambientes: lacuna.ambientes ?? [],
     disciplinas: lacuna.disciplinas ?? DISCIPLINA_POR_CATEGORIA[lacuna.categoria] ?? ['arquitetura'],
     relacionadas: lacuna.relacionadas ?? [],

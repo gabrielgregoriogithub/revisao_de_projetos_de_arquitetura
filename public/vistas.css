@@ -320,3 +320,17 @@
   .entrada, select.entrada { min-height: 42px; font-size: 16px; }
   .botao { height: 40px; }
 }
+
+/* ───────── Botões seletores (ex.: Existente mantido / Novo) ───────── */
+fieldset.seletor { border: 0; margin: 0; padding: 0; min-width: 0; }
+fieldset.seletor legend { padding: 0; margin-bottom: 5px; font-size: var(--t-13); color: var(--tinta-2); font-weight: 500; }
+.segmentado { display: inline-flex; border: 1px solid var(--borda-forte); border-radius: var(--raio-1); overflow: hidden; background: var(--superficie); box-shadow: var(--sombra-1); }
+.opcao-seletor { position: relative; display: inline-flex; cursor: pointer; }
+.opcao-seletor + .opcao-seletor { border-left: 1px solid var(--borda-forte); }
+.opcao-seletor input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.opcao-seletor span { padding: 7px 14px; font-size: var(--t-13); font-weight: 500; color: var(--tinta-2); transition: background var(--rapido), color var(--rapido); }
+.opcao-seletor:hover span { background: var(--superficie-3); color: var(--tinta); }
+.opcao-seletor input:checked + span { background: var(--acento); color: #fff; }
+.opcao-seletor input:focus-visible + span { outline: 2px solid var(--acento); outline-offset: -2px; }
+fieldset.seletor:disabled .opcao-seletor { cursor: not-allowed; opacity: .6; }
+@media (max-width: 960px) { .opcao-seletor span { padding: 10px 16px; } }

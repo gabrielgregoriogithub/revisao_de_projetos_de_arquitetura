@@ -1,6 +1,6 @@
 // Núcleo do store: validação, workflow, histórico, ambientes, escala e anotações — sem dependência de Node.
 import { STATUS, transicaoPermitida, STATUS_INFO } from './dominio/status.js';
-import { normalizarLacuna, verificarIntegridade, anotarPrecisao } from './dominio/lacunas.js';
+import { normalizarLacuna, verificarIntegridade, anotarPrecisao, camposDaLacuna } from './dominio/lacunas.js';
 import { INCERTEZAS } from './dominio/impacto.js';
 import { medirAmbiente } from './dominio/geometria.js';
 import { lerNumeroBr } from './dominio/numeros.js';
@@ -318,9 +318,8 @@ export function criarNucleo(arm) {
   });
 
   /** Lacuna criada manualmente no app (ID novo, nunca reaproveitado; origem registrada). */
-  const SITUACAO = ['situacao', 'Existente mantido / novo', ['Existente mantido', 'Novo']];
   const CAMPOS_PADRAO = {
-    piso: [['piso', 'Piso'], SITUACAO], parede: [['parede', 'Acabamento de parede']], revestimento: [['piso', 'Piso'], ['parede', 'Revestimento de parede'], ['altura', 'Altura (m)'], SITUACAO],
+    piso: [['piso', 'Piso']], parede: [['parede', 'Acabamento de parede']], revestimento: [['piso', 'Piso'], ['parede', 'Revestimento de parede'], ['altura', 'Altura (m)']],
     forro: [['teto', 'Teto / forro']], iluminacao: [['modelo', 'Modelo / fabricante'], ['quantidade', 'Quantidade']],
     inconsistencia: [['resposta', 'Esclarecimento']], documentacao: [['resposta', 'Esclarecimento']]
   };
@@ -346,7 +345,7 @@ export function criarNucleo(arm) {
     const nova = {
       id: `L${String(maior + 1).padStart(2, '0')}`, titulo, categoria, prioridade,
       onde: t('onde', 300) || `Prancha p.${marcador.prancha}`, problema, pergunta, impacto: t('impacto', 1000) || 'A avaliar.',
-      campos: CAMPOS_PADRAO[categoria].map(([chave, rotulo, opcoes]) => ({ chave, rotulo, ...(opcoes ? { opcoes } : {}) })),
+      campos: camposDaLacuna({ campos: CAMPOS_PADRAO[categoria].map(([chave, rotulo]) => ({ chave, rotulo })) }),
       marcadores: [{ ...marcador, x: Math.round(marcador.x * 10) / 10, y: Math.round(marcador.y * 10) / 10, w: Math.round(marcador.w * 10) / 10, h: Math.round(marcador.h * 10) / 10 }],
       ambientes, identificadaEm: new Date().toISOString().slice(0, 10), origem: `Criada manualmente no app${autor ? ` por ${autor}` : ''}`
     };
@@ -367,7 +366,7 @@ export function criarNucleo(arm) {
     const lacuna = lacunas.find((l) => l.id === id);
     if (!lacuna) return { ok: false, codigo: 404, erro: `Lacuna ${id} não encontrada.` };
 
-    const v = validarResposta({ campos: lacuna.campos ?? [] }, corpo);
+    const v = validarResposta({ campos: camposDaLacuna(lacuna) }, corpo);
     if (!v.ok) return { ok: false, codigo: 400, erro: v.erro };
     for (const e of v.valor.evidencias) {
       if (e.anexo && !(await arm.anexoExiste(e.anexo.id))) return { ok: false, codigo: 400, erro: `Anexo ${e.anexo.nome} não encontrado no servidor.` };
