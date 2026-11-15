@@ -321,16 +321,36 @@
   .botao { height: 40px; }
 }
 
-/* ───────── Botões seletores (ex.: Existente mantido / Novo) ───────── */
-fieldset.seletor { border: 0; margin: 0; padding: 0; min-width: 0; }
-fieldset.seletor legend { padding: 0; margin-bottom: 5px; font-size: var(--t-13); color: var(--tinta-2); font-weight: 500; }
-.segmentado { display: inline-flex; border: 1px solid var(--borda-forte); border-radius: var(--raio-1); overflow: hidden; background: var(--superficie); box-shadow: var(--sombra-1); }
-.opcao-seletor { position: relative; display: inline-flex; cursor: pointer; }
-.opcao-seletor + .opcao-seletor { border-left: 1px solid var(--borda-forte); }
+/* ───────── Botões seletores (ex.: Existente mantido / Novo) ─────────
+   Controle segmentado: trilho neutro, opções de mesma largura, a escolhida em "pílula" elevada com ✓. */
+fieldset.seletor { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 6px; }
+fieldset.seletor legend { padding: 0; margin-bottom: 6px; font-size: var(--t-13); color: var(--tinta-2); font-weight: 500; }
+.segmentado {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; padding: 3px;
+  background: var(--superficie-3); border: 1px solid var(--borda); border-radius: var(--raio-2);
+}
+.opcao-seletor { position: relative; display: flex; cursor: pointer; border-radius: 7px; }
 .opcao-seletor input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-.opcao-seletor span { padding: 7px 14px; font-size: var(--t-13); font-weight: 500; color: var(--tinta-2); transition: background var(--rapido), color var(--rapido); }
-.opcao-seletor:hover span { background: var(--superficie-3); color: var(--tinta); }
-.opcao-seletor input:checked + span { background: var(--acento); color: #fff; }
-.opcao-seletor input:focus-visible + span { outline: 2px solid var(--acento); outline-offset: -2px; }
-fieldset.seletor:disabled .opcao-seletor { cursor: not-allowed; opacity: .6; }
-@media (max-width: 960px) { .opcao-seletor span { padding: 10px 16px; } }
+.opcao-seletor span {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 32px; padding: 6px 12px;
+  border-radius: 7px; font-size: var(--t-13); font-weight: 500; color: var(--tinta-2); text-align: center; line-height: 1.2;
+  transition: background var(--rapido), color var(--rapido), box-shadow var(--rapido);
+}
+.opcao-seletor span::before {
+  content: ""; width: 14px; height: 14px; flex-shrink: 0; border-radius: 50%; border: 1.5px solid var(--borda-forte);
+  background: var(--superficie); transition: border-color var(--rapido), background var(--rapido);
+}
+.opcao-seletor:hover span { color: var(--tinta); background: color-mix(in srgb, var(--superficie) 60%, transparent); }
+.opcao-seletor input:checked + span {
+  background: var(--superficie); color: var(--acento); font-weight: 600;
+  box-shadow: 0 1px 2px rgb(20 22 28 / 10%), 0 0 0 1px color-mix(in srgb, var(--acento) 35%, transparent);
+}
+.opcao-seletor input:checked + span::before {
+  border-color: var(--acento); background: var(--acento)
+    url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M4 8.2l2.6 2.6L12 5.4%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center / 11px no-repeat;
+}
+.opcao-seletor input:focus-visible + span { outline: 2px solid var(--acento); outline-offset: 1px; }
+fieldset.seletor:disabled .segmentado { opacity: .6; }
+fieldset.seletor:disabled .opcao-seletor, fieldset.seletor:disabled .opcao-seletor input { cursor: not-allowed; }
+fieldset.seletor:disabled .opcao-seletor:hover span { background: none; color: var(--tinta-2); }
+@media (max-width: 960px) { .opcao-seletor span { min-height: 40px; } }
