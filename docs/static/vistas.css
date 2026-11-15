@@ -298,7 +298,8 @@
   .revisao, .revisao.sem-detalhe { display: flex; flex-direction: column; height: auto; min-height: 100%; }
   .col-lista { order: 3; border-right: 0; border-top: 1px solid var(--borda); max-height: none; }
   .col-lista .lista-compacta { max-height: 50vh; }
-  .col-visor { order: 1; height: 58vh; flex: none; }
+  .col-visor { order: 1; height: 78vh; min-height: 420px; flex: none; }
+  .barra-visor { gap: 6px; padding: 6px 8px; }
   .divisor { display: none; }
   .detalhe-col { order: 2; border-left: 0; overflow: visible; }
   .gestao, .gestao.com-detalhe { display: block; }

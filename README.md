@@ -170,7 +170,7 @@ test/                   56 testes: unidade, integração HTTP, exportações, se
 - **PDF**: os relatórios são HTML formatado para impressão em A4. O PDF sai pelo "Salvar como PDF" do navegador; não há gerador de PDF no servidor.
 - **Sem detecção geométrica de interferências**: a compatibilização registra o que o Claude Code identificou.
 - **Sem autenticação**: o "autor" do histórico é o nome configurado no navegador.
-- O layout responsivo (≤960 px) foi implementado, mas **não pôde ser verificado visualmente** no navegador de teste (a janela não aceitou largura de celular).
+- **Responsivo**: verificado em 390 px (celular) e 768 px (tablet) via iframes. Não há rolagem horizontal, o menu lateral vira o botão ☰ e a planta ocupa 78% da altura. Não foi testado em aparelho físico (iOS/Android).
 - **Áreas não medidas**: o quadro de ambientes do LOFT está vazio. A medição automática por segmentação de imagem foi testada e descartada por não ser confiável neste desenho (vazamento por janelas, vigas tracejadas e banheiros pequenos). As áreas devem ser medidas com a ferramenta **Área**.
 - **Versão publicada (GitHub Pages)**:
   - os dados ficam no IndexedDB do navegador, sem backup em disco;
