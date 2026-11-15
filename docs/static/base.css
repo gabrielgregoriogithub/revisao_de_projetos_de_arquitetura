@@ -90,6 +90,15 @@ body:has(.aviso-publicado) .app { height: 100vh; }
 .nav a .contagem { margin-left: auto; font-size: var(--t-12); color: var(--tinta-3); font-weight: 500; }
 .nav a[aria-current="page"] .contagem { color: var(--acento); }
 .sidebar-rodape { margin-top: auto; padding: 12px 10px 0; font-size: var(--t-12); color: var(--tinta-3); border-top: 1px solid var(--borda); }
+.creditos { display: flex; align-items: center; gap: 10px; padding: 10px 10px 2px; font-size: 11.5px; color: var(--tinta-3); line-height: 1.4; }
+.creditos-texto { display: grid; min-width: 0; }
+.creditos-texto strong { color: var(--tinta-2); font-weight: 600; }
+.creditos-linkedin { margin-left: auto; flex-shrink: 0; display: grid; place-items: center; width: 28px; height: 28px; border-radius: var(--raio-1); color: #0a66c2; transition: background var(--rapido), transform var(--rapido); }
+.creditos-linkedin svg { width: 20px; height: 20px; }
+.creditos-linkedin rect { fill: currentColor; }
+.creditos-linkedin path { fill: #fff; }
+.creditos-linkedin:hover { background: var(--superficie-3); transform: translateY(-1px); }
+:root[data-tema="escuro"] .creditos-linkedin { color: #4c9be8; }
 
 .principal { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .topo {
