@@ -20,7 +20,7 @@ Para publicar, ative em Settings › Pages: branch `main`, pasta `/docs` (ou `/`
 ```bash
 cd lacunas-app
 npm start                  # http://localhost:8766
-npm test                   # 79 testes (node:test), sem dependências
+npm test                   # 83 testes (node:test), sem dependências
 npm run validar            # integridade de projeto.json + lacunas.json
 npm run processar          # prévia do processamento de respostas (não altera nada)
 npm run processar:aplicar  # aplica (com backup) — usado pelo Claude Code
@@ -62,6 +62,21 @@ Há indicador de alterações não salvas, confirmação antes de descartar e `C
 ### Atalhos
 
 `M` área · `D` distância · `L` linha · `T` texto · `Enter` conclui · `Backspace` desfaz vértice · `J`/`K` próxima/anterior lacuna · `Shift+J`/`Shift+K` marcador · `[`/`]` prancha · `+`/`−` zoom · `F` ajustar · `0` 100% · `Ctrl+S` salvar · `/` buscar · `Esc` fechar · `g` seguido de `v`/`p`/`l`/`c`/`o`/`r` navega · `?` ajuda.
+
+## Sugestões automáticas (regras fixas, sem IA)
+
+O app sugere respostas para algumas lacunas com base em regras determinísticas (`lib/dominio/sugestoes.js`). Funciona igual na versão local e no GitHub Pages.
+
+| Regra | Quando se aplica | Confiança |
+|---|---|---|
+| Numeração de folhas repetida | Lacuna de documentação sobre folhas, quando há números de folha duplicados nas pranchas | Alta |
+| Consistência com outra lacuna | Outra lacuna do mesmo ambiente ou relacionada já respondeu o mesmo campo | Alta se validada; média se só respondida |
+| Área molhada ou lavável | Banheiro, lavabo, copa, cozinha, amamentação, DML ou vestiário (halls e circulações ficam de fora): recomendação técnica genérica | Baixa (não é especificação) |
+| Quantidade já levantada | O impacto financeiro da lacuna já tem quantidade com origem | Alta |
+
+- A sugestão **não vira resposta sozinha**: o botão "Aplicar ao formulário" só preenche campos **vazios** e grava um rastro na observação. Você revisa e salva, e a resposta continua precisando de **validação técnica com evidência**.
+- No LOFT, hoje recebem sugestão as lacunas L01, L02, L03, L10 e L13. A regra de consistência passa a cobrir mais lacunas à medida que elas são respondidas.
+- Decisões que só o projetista pode tomar (cor do vinílico, modelo de luminária, modelo do condomínio) nunca recebem sugestão.
 
 ## Workflow de status
 
@@ -182,5 +197,5 @@ test/                   56 testes: unidade, integração HTTP, exportações, se
 
 ## Testes
 
-- `npm test`: 79 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
+- `npm test`: 83 testes, incluindo os 20 originais da v0.1 sem alteração. A importação de PDF é testada com um PDF gerado no próprio teste, usando o poppler real.
 - Testado no Chrome, pelo DOM: as 8 telas sem erros; prancha em 5617 px com 27 marcadores na p.2; foco centraliza o marcador no meio da viewport; o marcador mantém a posição relativa exata após zoom e arraste; 100% e ajustar funcionam; fluxo respondida → em validação → validação recusada sem evidência → validada; histórico com 3 eventos; conflito de revisão (409); busca preservando o foco; lote com confirmação; atalho J; relatórios com recortes; sincronização externa detectada em menos de 6 s.

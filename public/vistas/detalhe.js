@@ -8,6 +8,7 @@ import { STATUS_INFO, proximosStatus, transicaoPermitida } from '/dominio/status
 import { CATEGORIAS, DISCIPLINAS } from '/dominio/lacunas.js';
 import { impactoEfetivo, TIPOS_IMPACTO, INCERTEZAS, formatarMoeda } from '/dominio/impacto.js';
 import { lerNumeroBr } from '/dominio/numeros.js';
+import { sugerirRespostas, TIPOS_SUGESTAO } from '/dominio/sugestoes.js';
 
 const ACAO = {
   respondida: { rotulo: ESTATICO ? 'Registrar resposta' : 'Devolver para o Claude', classe: 'pri', ic: 'check' },
@@ -107,8 +108,38 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
     })]) : null,
   el('p', { className: 'muted', style: 'margin:0;font-size:12px', textContent: `Identificada em ${l.identificadaEm ?? '—'} · ${l.origem}` })]);
 
-  // ── 2. Resposta
+  // ── Sugestões automáticas (regras fixas, sem IA): só preenchem o formulário; o usuário revisa e salva.
   const editavel = EDITAVEIS.includes(r.status);
+  const sugestoes = editavel ? (sugerirRespostas(estado.projeto, estado.lacunas)[l.id] ?? []) : [];
+  const aplicarSugestao = (s) => {
+    const rotulos = Object.fromEntries(l.campos.map((c) => [c.chave, c.rotulo]));
+    const ignorados = [];
+    for (const [chave, valor] of Object.entries(s.campos)) {
+      const campo = raiz.elements[`campo:${chave}`];
+      if (!campo) continue;
+      if (campo.value.trim()) { ignorados.push(rotulos[chave]); continue; } // nunca sobrescreve o que foi digitado
+      campo.value = valor;
+    }
+    const obs = raiz.elements.observacao;
+    const rastro = `[Sugestão automática aplicada: ${s.titulo} — ${s.fonte}; confiança ${s.confianca}]`;
+    if (obs && !obs.value.includes(rastro)) obs.value = [obs.value.trim(), rastro].filter(Boolean).join('\n');
+    marcarSujo();
+    avisar(ignorados.length ? `Sugestão aplicada, exceto em: ${ignorados.join(', ')} (já preenchidos). Revise e salve.` : 'Sugestão aplicada ao formulário. Revise e salve: ela ainda precisa de validação técnica.');
+    raiz.querySelector('[name^="campo:"]')?.focus();
+  };
+  const CONF = { alta: 'Confiança alta', media: 'Confiança média', baixa: 'Confiança baixa' };
+  const secaoSugestoes = sugestoes.length ? secao('Sugestões automáticas', [
+    el('p', { className: 'muted', style: 'margin:0;font-size:12px', textContent: 'Geradas por regras fixas a partir dos dados do projeto. Não são respostas: aplique ao formulário, revise e salve.' }),
+    ...sugestoes.map((s) => el('div', { className: 'bloco-sugestao', 'data-confianca': s.confianca }, [
+      el('div', { className: 'chips' }, [el('strong', { textContent: s.titulo }), etiqueta(TIPOS_SUGESTAO[s.tipo]), etiqueta(CONF[s.confianca])]),
+      el('ul', {}, Object.entries(s.campos).map(([k, v]) => el('li', {}, [el('b', { textContent: `${l.campos.find((c) => c.chave === k)?.rotulo ?? k}: ` }), v]))),
+      el('p', { textContent: s.justificativa }),
+      el('p', { className: 'muted', textContent: `Fonte: ${s.fonte}` }),
+      botao('Aplicar ao formulário', { classe: 'peq', ic: 'check', onclick: () => aplicarSugestao(s) })
+    ]))
+  ], { cont: sugestoes.length }) : null;
+
+  // ── 2. Resposta
   const resposta = secao('Resposta', [
     ...l.campos.map((c) => campoTexto(c.rotulo, `campo:${c.chave}`, r.campos?.[c.chave], { disabled: !editavel })),
     campoTexto('Observação', 'observacao', r.observacao, { area: true, disabled: !editavel && !['em_validacao', 'validada', 'nao_aplicavel'].includes(r.status) }),
@@ -253,7 +284,7 @@ export function renderizarDetalhe(alvo, id, { aoVerMarcador, aoNavegar, aoFechar
       .map((s) => botao(ACAO[s].rotulo, { classe: ACAO[s].classe ?? '', ic: ACAO[s].ic, onclick: () => salvar(s), titulo: STATUS_INFO[s].descricao }))
   ]);
 
-  raiz.append(topo, el('div', { className: 'secoes' }, [entender, resposta, evid, validacao, impacto, historico]), acoes);
+  raiz.append(topo, el('div', { className: 'secoes' }, [entender, secaoSugestoes, resposta, evid, validacao, impacto, historico].filter(Boolean)), acoes);
   alvo.replaceChildren(raiz);
   atualizarTotal();
 

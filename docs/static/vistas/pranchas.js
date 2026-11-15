@@ -7,6 +7,7 @@ import { renderizarDetalhe } from './detalhe.js';
 import { criarMedicao } from '../medicao.js';
 import { api, urlPrancha } from '../api.js';
 import { escalaDe } from '/dominio/geometria.js';
+import { sugerirRespostas } from '/dominio/sugestoes.js';
 
 export function montar(alvo, { navegar, params }) {
   const projeto = estado.projeto;
@@ -101,6 +102,7 @@ export function montar(alvo, { navegar, params }) {
 
   function desenharLista() {
     const lista = visiveis();
+    const sugestoes = sugerirRespostas(estado.projeto, estado.lacunas);
     const pend = (n) => new Set(estado.lacunas.filter((l) => !['validada', 'nao_aplicavel'].includes(l.resposta.status) && l.pranchas.includes(n)).map((l) => l.id)).size;
     colLista.replaceChildren(
       el('div', { className: 'miniaturas' }, projeto.pranchas.map((p) => el('button', {
@@ -114,7 +116,7 @@ export function montar(alvo, { navegar, params }) {
         onclick: () => selecionar(l.id)
       }, [el('span', { className: 'codigo', textContent: l.id }), el('span', { className: 'tit', textContent: l.titulo }),
         el('span', { className: 'meta' }, [el('i', { className: 'ponto', style: `background:${corStatus(l.resposta.status)}` }),
-          `${l.prioridade} · p.${l.pranchas.join(', ')}`])])])))
+          `${l.prioridade} · p.${l.pranchas.join(', ')}`, sugestoes[l.id] ? el('span', { className: 'selo-sugestao', title: 'Há sugestão automática', textContent: 'sugestão' }) : null])])])))
         : vazio('Nenhuma lacuna', 'Ajuste os filtros.', 'lacunas')
     );
     colLista.querySelector('[aria-current="true"].item-lacuna')?.scrollIntoView({ block: 'nearest' });

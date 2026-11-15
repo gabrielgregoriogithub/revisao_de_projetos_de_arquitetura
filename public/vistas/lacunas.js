@@ -6,6 +6,7 @@ import { botao, barraFiltros, seloStatus, etiquetaPrioridade, etiqueta, vazio, a
 import { renderizarDetalhe } from './detalhe.js';
 import { STATUS_INFO } from '/dominio/status.js';
 import { CATEGORIAS } from '/dominio/lacunas.js';
+import { sugerirRespostas } from '/dominio/sugestoes.js';
 
 const STATUS_LOTE = ['pendente', 'em_validacao', 'reaberta', 'nao_aplicavel'];
 
@@ -85,6 +86,7 @@ export function montar(alvo, { navegar, params }) {
   });
 
   function tabela(lista) {
+    const sugestoes = sugerirRespostas(estado.projeto, estado.lacunas);
     const todos = el('input', { type: 'checkbox', 'aria-label': 'Selecionar todas', checked: lista.length > 0 && lista.every((l) => selecao.has(l.id)),
       onchange: (e) => { selecao = e.target.checked ? new Set(lista.map((l) => l.id)) : new Set(); desenhar(); } });
     return el('table', { className: 'tabela-lacunas' }, [
@@ -95,7 +97,8 @@ export function montar(alvo, { navegar, params }) {
         onkeydown: (e) => { if (e.key === 'Enter') abrir(l.id); } }, [
         el('td', {}, [check(l)]),
         el('td', {}, [el('span', { className: 'codigo', textContent: l.id })]),
-        el('td', {}, [el('div', { className: 'tit', textContent: l.titulo }), el('div', { className: 'sub', textContent: l.onde })]),
+        el('td', {}, [el('div', { className: 'tit', textContent: l.titulo }), el('div', { className: 'sub', textContent: l.onde }),
+          sugestoes[l.id] ? el('span', { className: 'selo-sugestao', title: 'Há sugestão automática no detalhe', textContent: 'Sugestão disponível' }) : null]),
         el('td', {}, [seloStatus(l.resposta.status)]),
         el('td', {}, [etiquetaPrioridade(l.prioridade)]),
         el('td', { className: 'ocultar-mobile', textContent: CATEGORIAS[l.categoria] ?? l.categoria }),
